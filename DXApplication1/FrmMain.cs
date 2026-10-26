@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors;
 using DXApplication1.Common;
 using DXApplication1.MachineCls.SM_Printing;
 using System;
@@ -127,6 +127,20 @@ namespace DXApplication1
             {
                 Global.PassworSetting = tmp;
             }
+
+            // Khoi dong BlockId Ingestion Worker
+            BlockId.BlockIdQueueManager.StartWorker();
+            BlockId.BlockIdQueueManager.OnBlockIdAlert += (alertMsg, alertSev) =>
+            {
+                try
+                {
+                    this.BeginInvoke(new Action(() =>
+                    {
+                        MessageBox.Show(alertMsg, "Canh bao BlockId API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }));
+                }
+                catch { }
+            };
         }
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -136,6 +150,7 @@ namespace DXApplication1
                 Timer1sRelease();
                 TimerrUpdateViewRelease();               
                 KillAllThreadsNew();
+                BlockId.BlockIdQueueManager.StopWorker();
                 isCloseForm = true;
             }
             else
@@ -150,6 +165,14 @@ namespace DXApplication1
         {
             FrmConfig frmConfig = new FrmConfig();
             frmConfig.ShowDialog();
+        }
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            using (var frm = new BlockId.FrmBlockIdConfig())
+            {
+                frm.ShowDialog();
+            }
         }
 
         #region TIMER
@@ -186,6 +209,10 @@ namespace DXApplication1
             bsiRAM.Caption = sBuff + "MB";
 
             bsiPlcIP.Caption = $"{VarGlobal.McSMPrinting.PlcIp}";
+            if (BlockId.BlockIdConfig.Instance.Enable)
+            {
+                bsiPLCStatus.Caption = $"BlockId: {BlockId.BlockIdQueueManager.LastStatus} [Queue: {BlockId.BlockIdQueueManager.PendingCount}]";
+            }
 
             string message = "";
             if(txtPLCStatMonitor.Text == "DISCONNECTED")
@@ -413,6 +440,17 @@ namespace DXApplication1
                                     if (VarGlobal.McSMPrinting.EnablePlcKV)
                                     {
                                         VarGlobal.McSMPrinting.BlockID2KVList.Add(new BlockID2KV() { BlockID = VarGlobal.McSMPrinting.BlockIDs[i].BlockID });
+                                    }
+
+                                    // BlockId Ingestion API
+                                    if (BlockId.BlockIdConfig.Instance.Enable)
+                                    {
+                                        BlockId.BlockIdQueueManager.EnqueueRecord(
+                                            VarGlobal.McSMPrinting.BlockIDs[i].BlockID,
+                                            VarGlobal.McSMPrinting.arrItem[0]?.ItemLot ?? "",
+                                            VarGlobal.McSMPrintingParam,
+                                            txtSRPrintingMcID.Text
+                                        );
                                     }
                                 }
                                 else

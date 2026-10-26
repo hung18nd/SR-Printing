@@ -374,6 +374,7 @@ namespace DXApplication1
             this.bar8.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem2),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2)});
             this.bar8.OptionsBar.MultiLine = true;
             this.bar8.OptionsBar.UseWholeRow = true;
@@ -553,7 +554,8 @@ namespace DXApplication1
             // 
             // barButtonItem2
             // 
-            this.barButtonItem2.Caption = "Tools";
+            this.barButtonItem2.Caption = "BlockId API";
+            this.barButtonItem2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
             this.barButtonItem2.Id = 11;
             this.barButtonItem2.Name = "barButtonItem2";
             // 
