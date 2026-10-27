@@ -21,7 +21,6 @@ namespace DXApplication1.BlockId
         private TextBox txtCodeAirPressure;
         private TextBox txtTestLog;
         private Button btnTestConnection;
-        private Button btnOpenSimulator;
         private Button btnSave;
         private Button btnCancel;
         private CheckBox chkShowKey;
@@ -130,14 +129,6 @@ namespace DXApplication1.BlockId
             btnTestConnection.Size = new Size(230, 30);
             btnTestConnection.Click += BtnTestConnection_Click;
             grpTest.Controls.Add(btnTestConnection);
-
-            btnOpenSimulator = new Button();
-            btnOpenSimulator.Text = "Mở Bộ Giả Lập & Server Ảo (Simulator)";
-            btnOpenSimulator.Location = new Point(265, 25);
-            btnOpenSimulator.Size = new Size(260, 30);
-            btnOpenSimulator.BackColor = Color.LightCyan;
-            btnOpenSimulator.Click += (s, e) => { new FrmBlockIdSimulator().Show(); };
-            grpTest.Controls.Add(btnOpenSimulator);
 
             txtTestLog.Location = new Point(20, 60);
             txtTestLog.Size = new Size(635, 65);
