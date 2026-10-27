@@ -123,6 +123,9 @@
     <Compile Include="BlockId\FrmBlockIdConfig.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="BlockId\FrmBlockIdSimulator.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Common\Conversion.cs" />
     <Compile Include="Common\Global.cs" />
     <Compile Include="Common\IniFile.cs" />
