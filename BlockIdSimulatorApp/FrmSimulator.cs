@@ -348,6 +348,8 @@ namespace BlockIdSimulatorApp
                 byte[] hBytes = Encoding.ASCII.GetBytes(header);
                 stream.Write(hBytes, 0, hBytes.Length);
                 stream.Write(bBytes, 0, bBytes.Length);
+                stream.Flush();
+                Thread.Sleep(20);
             }
         }
 

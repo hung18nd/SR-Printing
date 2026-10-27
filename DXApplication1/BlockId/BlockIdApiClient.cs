@@ -36,7 +36,8 @@ namespace DXApplication1.BlockId
                 request.Headers.Add("X-Api-Key", apiKey ?? "");
                 request.Timeout = TimeoutMs;
                 request.ReadWriteTimeout = TimeoutMs;
-                request.KeepAlive = true;
+                request.KeepAlive = false;
+                request.ServicePoint.Expect100Continue = false;
 
                 byte[] postBytes = Encoding.UTF8.GetBytes(jsonPayload);
                 request.ContentLength = postBytes.Length;
