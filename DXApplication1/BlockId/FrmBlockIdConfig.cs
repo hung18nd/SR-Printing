@@ -1,190 +1,41 @@
 using System;
-using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using DXApplication1.Common;
 
 namespace DXApplication1.BlockId
 {
-    public class FrmBlockIdConfig : DevExpress.XtraEditors.XtraForm
+    public partial class FrmBlockIdConfig : Form
     {
-        private System.ComponentModel.IContainer components = null;
-        private CheckBox chkEnable;
-        private CheckBox chkEnablePlcKV;
-        private TextBox txtApiUrl;
-        private TextBox txtApiKey;
-        private TextBox txtMachineCode;
-        private TextBox txtSourceUrn;
-        private ComboBox cbbSendMode;
-        private TextBox txtCodePrintingTime;
-        private TextBox txtCodeSqueezePressure;
-        private TextBox txtCodeSqueezeSpeed;
-        private TextBox txtCodeGap;
-        private TextBox txtCodeAirPressure;
-        private TextBox txtTestLog;
-        private Button btnTestConnection;
-        private Button btnSave;
-        private Button btnCancel;
-        private CheckBox chkShowKey;
-
         public FrmBlockIdConfig()
         {
             InitializeComponent();
             LoadConfigToUI();
         }
 
-        private void InitializeComponent()
+        private void chkEnablePlcKV_CheckedChanged(object sender, EventArgs e)
         {
-            this.chkEnable = new CheckBox();
-            this.chkEnablePlcKV = new CheckBox();
-            this.txtApiUrl = new TextBox();
-            this.txtApiKey = new TextBox();
-            this.txtMachineCode = new TextBox();
-            this.txtSourceUrn = new TextBox();
-            this.cbbSendMode = new ComboBox();
-            this.txtCodePrintingTime = new TextBox();
-            this.txtCodeSqueezePressure = new TextBox();
-            this.txtCodeSqueezeSpeed = new TextBox();
-            this.txtCodeGap = new TextBox();
-            this.txtCodeAirPressure = new TextBox();
-            this.txtTestLog = new TextBox();
-            this.btnTestConnection = new Button();
-            this.btnSave = new Button();
-            this.btnCancel = new Button();
-            this.chkShowKey = new CheckBox();
-
-            // Form
-            this.Text = "BlockId API Configuration";
-            this.Size = new Size(720, 620);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-
-            int leftLabel = 20;
-            int leftBox = 160;
-            int boxWidth = 500;
-
-            // Group 1: General
-            var grpGeneral = new GroupBox
+            if (chkEnablePlcKV.Checked && chkEnable.Checked)
             {
-                Text = "1. BlockId Connection Settings",
-                Location = new Point(15, 10),
-                Size = new Size(675, 230)
-            };
-
-            chkEnablePlcKV.Text = "Enable PLC KV";
-            chkEnablePlcKV.Location = new Point(leftBox, 22);
-            chkEnablePlcKV.AutoSize = true;
-            chkEnablePlcKV.Font = new Font(this.Font, FontStyle.Bold);
-
-            chkEnable.Text = "Enable BlockId Data Ingestion";
-            chkEnable.Location = new Point(leftBox + 150, 22);
-            chkEnable.AutoSize = true;
-            chkEnable.Font = new Font(this.Font, FontStyle.Bold);
-
-            // Mutual exclusion: when KV is ON, API is OFF; when API is ON, KV is OFF.
-            chkEnablePlcKV.CheckedChanged += (s, e) =>
-            {
-                if (chkEnablePlcKV.Checked && chkEnable.Checked)
-                {
-                    chkEnable.Checked = false;
-                }
-            };
-
-            chkEnable.CheckedChanged += (s, e) =>
-            {
-                if (chkEnable.Checked && chkEnablePlcKV.Checked)
-                {
-                    chkEnablePlcKV.Checked = false;
-                }
-            };
-
-            AddRow(grpGeneral, "API Endpoint:", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "API Key:", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
-            txtApiKey.UseSystemPasswordChar = true;
-
-            chkShowKey.Text = "Show Key";
-            chkShowKey.Location = new Point(leftBox + boxWidth - 80, 82);
-            chkShowKey.AutoSize = true;
-            chkShowKey.CheckedChanged += (s, e) => { txtApiKey.UseSystemPasswordChar = !chkShowKey.Checked; };
-            grpGeneral.Controls.Add(chkShowKey);
-
-            AddRow(grpGeneral, "Machine ID:", txtMachineCode, 114, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "Client Source:", txtSourceUrn, 146, leftLabel, leftBox, boxWidth);
-
-            var lblMode = new Label { Text = "Send Mode:", Location = new Point(leftLabel, 180), AutoSize = true };
-            cbbSendMode.Location = new Point(leftBox, 177);
-            cbbSendMode.Width = 340;
-            cbbSendMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbbSendMode.Items.Add("Single Barcode");
-            cbbSendMode.Items.Add("Tray / Lot Batch");
-            grpGeneral.Controls.Add(lblMode);
-            grpGeneral.Controls.Add(cbbSendMode);
-            grpGeneral.Controls.Add(chkEnablePlcKV);
-            grpGeneral.Controls.Add(chkEnable);
-
-            // Group 2: Param Codes
-            var grpCodes = new GroupBox
-            {
-                Text = "2. BlockId Parameter Code Mapping",
-                Location = new Point(15, 250),
-                Size = new Size(675, 130)
-            };
-
-            AddRow(grpCodes, "Printing Time:", txtCodePrintingTime, 25, 20, 160, 160);
-            AddRow(grpCodes, "Squeeze Press:", txtCodeSqueezePressure, 25, 350, 480, 170);
-
-            AddRow(grpCodes, "Squeeze Speed:", txtCodeSqueezeSpeed, 60, 20, 160, 160);
-            AddRow(grpCodes, "Snap-off Gap:", txtCodeGap, 60, 350, 480, 170);
-
-            AddRow(grpCodes, "Air Pressure:", txtCodeAirPressure, 95, 20, 160, 160);
-
-            // Group 3: Test & Log
-            var grpTest = new GroupBox
-            {
-                Text = "3. Connection Test & API Response",
-                Location = new Point(15, 390),
-                Size = new Size(675, 135)
-            };
-
-            btnTestConnection.Text = "Test Connection";
-            btnTestConnection.Location = new Point(20, 25);
-            btnTestConnection.Size = new Size(200, 30);
-            btnTestConnection.Click += BtnTestConnection_Click;
-            grpTest.Controls.Add(btnTestConnection);
-
-            txtTestLog.Location = new Point(20, 60);
-            txtTestLog.Size = new Size(635, 65);
-            txtTestLog.Multiline = true;
-            txtTestLog.ScrollBars = ScrollBars.Vertical;
-            txtTestLog.ReadOnly = true;
-            grpTest.Controls.Add(txtTestLog);
-
-            // Buttons
-            btnSave.Text = "Save Config";
-            btnSave.Location = new Point(480, 535);
-            btnSave.Size = new Size(100, 32);
-            btnSave.Click += BtnSave_Click;
-
-            btnCancel.Text = "Close";
-            btnCancel.Location = new Point(590, 535);
-            btnCancel.Size = new Size(100, 32);
-            btnCancel.Click += (s, e) => this.Close();
-
-            this.Controls.Add(grpGeneral);
-            this.Controls.Add(grpCodes);
-            this.Controls.Add(grpTest);
-            this.Controls.Add(btnSave);
-            this.Controls.Add(btnCancel);
+                chkEnable.Checked = false;
+            }
         }
 
-        private void AddRow(Control parent, string labelText, TextBox box, int top, int labelLeft, int boxLeft, int boxWidth)
+        private void chkEnable_CheckedChanged(object sender, EventArgs e)
         {
-            var lbl = new Label { Text = labelText, Location = new Point(labelLeft, top + 3), AutoSize = true };
-            box.Location = new Point(boxLeft, top);
-            box.Width = boxWidth;
-            parent.Controls.Add(lbl);
-            parent.Controls.Add(box);
+            if (chkEnable.Checked && chkEnablePlcKV.Checked)
+            {
+                chkEnablePlcKV.Checked = false;
+            }
+        }
+
+        private void chkShowKey_CheckedChanged(object sender, EventArgs e)
+        {
+            txtApiKey.UseSystemPasswordChar = !chkShowKey.Checked;
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void LoadConfigToUI()
@@ -244,15 +95,16 @@ namespace DXApplication1.BlockId
             string apiKey = txtApiKey.Text.Trim();
             string mc = txtMachineCode.Text.Trim();
 
-            System.Threading.Tasks.Task.Run(() =>
+            Task.Run(() =>
             {
                 var res = BlockIdQueueManager.TestConnection(url, apiKey, mc);
-                this.Invoke(new Action(() =>
+
+                this.BeginInvoke(new Action(() =>
                 {
                     btnTestConnection.Enabled = true;
                     if (res.IsSuccess)
                     {
-                        txtTestLog.Text = $"[SUCCESS] HTTP Status: {res.StatusCode} ({(res.IsDuplicate ? "Duplicate / Already Accepted" : "Accepted")})\r\nResponse: {res.ResponseBody}";
+                        txtTestLog.Text = $"[SUCCESS] HTTP Status: {res.StatusCode} - {(res.IsDuplicate ? "Duplicate Record" : "Accepted")}\r\nResponse: {res.ResponseBody}";
                     }
                     else
                     {
@@ -260,15 +112,6 @@ namespace DXApplication1.BlockId
                     }
                 }));
             });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
