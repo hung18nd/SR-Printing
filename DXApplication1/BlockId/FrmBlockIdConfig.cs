@@ -51,7 +51,7 @@ namespace DXApplication1.BlockId
             this.chkShowKey = new CheckBox();
 
             // Form
-            this.Text = "BlockId API Ingestion Protocol v1.0 Configuration";
+            this.Text = "BlockId API Configuration";
             this.Size = new Size(720, 620);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -75,8 +75,8 @@ namespace DXApplication1.BlockId
             chkEnable.AutoSize = true;
             chkEnable.Font = new Font(this.Font, FontStyle.Bold);
 
-            AddRow(grpGeneral, "API Endpoint (URL):", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "API Key (Secret):", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
+            AddRow(grpGeneral, "API Endpoint:", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "API Key:", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
             txtApiKey.UseSystemPasswordChar = true;
 
             chkShowKey.Text = "Show Key";
@@ -85,15 +85,15 @@ namespace DXApplication1.BlockId
             chkShowKey.CheckedChanged += (s, e) => { txtApiKey.UseSystemPasswordChar = !chkShowKey.Checked; };
             grpGeneral.Controls.Add(chkShowKey);
 
-            AddRow(grpGeneral, "Machine ID (Subject):", txtMachineCode, 114, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "Client Source (URN):", txtSourceUrn, 146, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "Machine ID:", txtMachineCode, 114, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "Client Source:", txtSourceUrn, 146, leftLabel, leftBox, boxWidth);
 
             var lblMode = new Label { Text = "Send Mode:", Location = new Point(leftLabel, 180), AutoSize = true };
             cbbSendMode.Location = new Point(leftBox, 177);
             cbbSendMode.Width = 340;
             cbbSendMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbbSendMode.Items.Add("Mode 1: Single Barcode (Recommended for SR Printing)");
-            cbbSendMode.Items.Add("Mode 2: By Tray / Trolley");
+            cbbSendMode.Items.Add("Single Barcode");
+            cbbSendMode.Items.Add("Tray / Lot Batch");
             grpGeneral.Controls.Add(lblMode);
             grpGeneral.Controls.Add(cbbSendMode);
             grpGeneral.Controls.Add(chkEnable);
@@ -106,13 +106,13 @@ namespace DXApplication1.BlockId
                 Size = new Size(675, 130)
             };
 
-            AddRow(grpCodes, "Printing Time (Code):", txtCodePrintingTime, 25, 20, 160, 160);
-            AddRow(grpCodes, "Squeeze Press (Code):", txtCodeSqueezePressure, 25, 350, 480, 170);
+            AddRow(grpCodes, "Printing Time:", txtCodePrintingTime, 25, 20, 160, 160);
+            AddRow(grpCodes, "Squeeze Press:", txtCodeSqueezePressure, 25, 350, 480, 170);
 
-            AddRow(grpCodes, "Squeeze Speed (Code):", txtCodeSqueezeSpeed, 60, 20, 160, 160);
-            AddRow(grpCodes, "Snap-off Gap (Code):", txtCodeGap, 60, 350, 480, 170);
+            AddRow(grpCodes, "Squeeze Speed:", txtCodeSqueezeSpeed, 60, 20, 160, 160);
+            AddRow(grpCodes, "Snap-off Gap:", txtCodeGap, 60, 350, 480, 170);
 
-            AddRow(grpCodes, "Air Pressure (Code):", txtCodeAirPressure, 95, 20, 160, 160);
+            AddRow(grpCodes, "Air Pressure:", txtCodeAirPressure, 95, 20, 160, 160);
 
             // Group 3: Test & Log
             var grpTest = new GroupBox
