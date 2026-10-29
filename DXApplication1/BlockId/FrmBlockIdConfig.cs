@@ -9,6 +9,7 @@ namespace DXApplication1.BlockId
     {
         private System.ComponentModel.IContainer components = null;
         private CheckBox chkEnable;
+        private CheckBox chkEnablePlcKV;
         private TextBox txtApiUrl;
         private TextBox txtApiKey;
         private TextBox txtMachineCode;
@@ -34,6 +35,7 @@ namespace DXApplication1.BlockId
         private void InitializeComponent()
         {
             this.chkEnable = new CheckBox();
+            this.chkEnablePlcKV = new CheckBox();
             this.txtApiUrl = new TextBox();
             this.txtApiKey = new TextBox();
             this.txtMachineCode = new TextBox();
@@ -70,10 +72,32 @@ namespace DXApplication1.BlockId
                 Size = new Size(675, 230)
             };
 
+            chkEnablePlcKV.Text = "Enable PLC KV";
+            chkEnablePlcKV.Location = new Point(leftBox, 22);
+            chkEnablePlcKV.AutoSize = true;
+            chkEnablePlcKV.Font = new Font(this.Font, FontStyle.Bold);
+
             chkEnable.Text = "Enable BlockId Data Ingestion";
-            chkEnable.Location = new Point(leftBox, 22);
+            chkEnable.Location = new Point(leftBox + 150, 22);
             chkEnable.AutoSize = true;
             chkEnable.Font = new Font(this.Font, FontStyle.Bold);
+
+            // Mutual exclusion: when KV is ON, API is OFF; when API is ON, KV is OFF.
+            chkEnablePlcKV.CheckedChanged += (s, e) =>
+            {
+                if (chkEnablePlcKV.Checked && chkEnable.Checked)
+                {
+                    chkEnable.Checked = false;
+                }
+            };
+
+            chkEnable.CheckedChanged += (s, e) =>
+            {
+                if (chkEnable.Checked && chkEnablePlcKV.Checked)
+                {
+                    chkEnablePlcKV.Checked = false;
+                }
+            };
 
             AddRow(grpGeneral, "API Endpoint:", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
             AddRow(grpGeneral, "API Key:", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
@@ -96,6 +120,7 @@ namespace DXApplication1.BlockId
             cbbSendMode.Items.Add("Tray / Lot Batch");
             grpGeneral.Controls.Add(lblMode);
             grpGeneral.Controls.Add(cbbSendMode);
+            grpGeneral.Controls.Add(chkEnablePlcKV);
             grpGeneral.Controls.Add(chkEnable);
 
             // Group 2: Param Codes
@@ -165,6 +190,7 @@ namespace DXApplication1.BlockId
         private void LoadConfigToUI()
         {
             var cfg = BlockIdConfig.Instance;
+            chkEnablePlcKV.Checked = VarGlobal.McSMPrinting.EnablePlcKV;
             chkEnable.Checked = cfg.Enable;
             txtApiUrl.Text = cfg.ApiUrl;
             txtApiKey.Text = cfg.ApiKey;
@@ -182,6 +208,7 @@ namespace DXApplication1.BlockId
         private void BtnSave_Click(object sender, EventArgs e)
         {
             var cfg = BlockIdConfig.Instance;
+            cfg.EnablePlcKV = chkEnablePlcKV.Checked;
             cfg.Enable = chkEnable.Checked;
             cfg.ApiUrl = txtApiUrl.Text.Trim();
             cfg.ApiKey = txtApiKey.Text.Trim();
@@ -195,8 +222,16 @@ namespace DXApplication1.BlockId
             cfg.CodeGap = txtCodeGap.Text.Trim();
             cfg.CodeMachineAirPressure = txtCodeAirPressure.Text.Trim();
 
+            // Đồng bộ trạng thái PLC KV
+            VarGlobal.McSMPrinting.EnablePlcKV = chkEnablePlcKV.Checked;
+            try
+            {
+                VarGlobal.McSMPrinting.Write_Config();
+            }
+            catch { }
+
             cfg.Save();
-            MessageBox.Show("BlockId configuration saved successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Configuration saved successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
 

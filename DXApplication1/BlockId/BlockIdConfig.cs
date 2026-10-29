@@ -9,6 +9,7 @@ namespace DXApplication1.BlockId
         private static string ConfigPath => Path.Combine(Global.ApplicationPath(), "BlockIdConfig.ini");
 
         public bool Enable { get; set; } = false;
+        public bool EnablePlcKV { get; set; } = true;
         public string ApiUrl { get; set; } = "http://10.126.1.245:660/ingest/v1/events";
         public string ApiKey { get; set; } = "";
         public string MachineCode { get; set; } = "";
@@ -39,6 +40,7 @@ namespace DXApplication1.BlockId
                 {
                     IniFile ini = new IniFile(ConfigPath);
                     cfg.Enable = ini.IniReadValue("BLOCKID", "Enable", "false").ToLower() == "true";
+                    cfg.EnablePlcKV = ini.IniReadValue("BLOCKID", "EnablePlcKV", "true").ToLower() == "true";
                     cfg.ApiUrl = ini.IniReadValue("BLOCKID", "ApiUrl", "http://10.126.1.245:660/ingest/v1/events");
                     cfg.ApiKey = ini.IniReadValue("BLOCKID", "ApiKey", "");
                     cfg.MachineCode = ini.IniReadValue("BLOCKID", "MachineCode", "");
@@ -70,6 +72,7 @@ namespace DXApplication1.BlockId
             {
                 IniFile ini = new IniFile(ConfigPath);
                 ini.IniWriteValue("BLOCKID", "Enable", Enable.ToString().ToLower());
+                ini.IniWriteValue("BLOCKID", "EnablePlcKV", EnablePlcKV.ToString().ToLower());
                 ini.IniWriteValue("BLOCKID", "ApiUrl", ApiUrl ?? "");
                 ini.IniWriteValue("BLOCKID", "ApiKey", ApiKey ?? "");
                 ini.IniWriteValue("BLOCKID", "MachineCode", MachineCode ?? "");

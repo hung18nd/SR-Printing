@@ -1,4 +1,4 @@
-using DevExpress.XtraEditors;
+﻿using DevExpress.XtraEditors;
 using DXApplication1.Common;
 using DXApplication1.MachineCls.SM_Printing;
 using System;
@@ -127,6 +127,9 @@ namespace DXApplication1
             {
                 Global.PassworSetting = tmp;
             }
+            // Dong bo trang thai EnablePlcKV tu BlockIdConfig
+            var blockIdCfg = BlockId.BlockIdConfig.Instance;
+            VarGlobal.McSMPrinting.EnablePlcKV = blockIdCfg.EnablePlcKV;
 
             // Khoi dong BlockId Ingestion Worker
             BlockId.BlockIdQueueManager.StartWorker();
@@ -209,9 +212,17 @@ namespace DXApplication1
             bsiRAM.Caption = sBuff + "MB";
 
             bsiPlcIP.Caption = $"{VarGlobal.McSMPrinting.PlcIp}";
-            if (BlockId.BlockIdConfig.Instance.Enable)
+            if (VarGlobal.McSMPrinting.EnablePlcKV)
+            {
+                bsiPLCStatus.Caption = "PLC KV: ACTIVE | BlockId: NOT USED";
+            }
+            else if (BlockId.BlockIdConfig.Instance.Enable)
             {
                 bsiPLCStatus.Caption = $"BlockId: {BlockId.BlockIdQueueManager.LastStatus} [Queue: {BlockId.BlockIdQueueManager.PendingCount}]";
+            }
+            else
+            {
+                bsiPLCStatus.Caption = "BlockId: NOT USED";
             }
 
             string message = "";
@@ -439,18 +450,21 @@ namespace DXApplication1
                                     dgrConn.Rows.Insert(0, dgrConn.Rows.Count + 1, dtime, txtSRPrintingMcID.Text, txtTroleyID.Text, VarGlobal.McSMPrinting.BlockIDs[i].BlockID, txtOpratorID.Text);
                                     if (VarGlobal.McSMPrinting.EnablePlcKV)
                                     {
+                                        // KV = ON: Dung PLC KV
                                         VarGlobal.McSMPrinting.BlockID2KVList.Add(new BlockID2KV() { BlockID = VarGlobal.McSMPrinting.BlockIDs[i].BlockID });
                                     }
-
-                                    // BlockId Ingestion API
-                                    if (BlockId.BlockIdConfig.Instance.Enable)
+                                    else
                                     {
-                                        BlockId.BlockIdQueueManager.EnqueueRecord(
-                                            VarGlobal.McSMPrinting.BlockIDs[i].BlockID,
-                                            VarGlobal.McSMPrinting.arrItem[0]?.ItemLot ?? "",
-                                            VarGlobal.McSMPrintingParam,
-                                            txtSRPrintingMcID.Text
-                                        );
+                                        // KV = OFF: Dung API (neu API chua duoc enable thi off, enable thi chay API)
+                                        if (BlockId.BlockIdConfig.Instance.Enable)
+                                        {
+                                            BlockId.BlockIdQueueManager.EnqueueRecord(
+                                                VarGlobal.McSMPrinting.BlockIDs[i].BlockID,
+                                                VarGlobal.McSMPrinting.arrItem[0]?.ItemLot ?? "",
+                                                VarGlobal.McSMPrintingParam,
+                                                txtSRPrintingMcID.Text
+                                            );
+                                        }
                                     }
                                 }
                                 else

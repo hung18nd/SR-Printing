@@ -21,7 +21,7 @@ namespace DXApplication1.BlockId
 
     public class BlockIdApiClient
     {
-        private static readonly int TimeoutMs = 10000; // 10 giây theo tài liệu
+        private static readonly int TimeoutMs = 10000; 
 
         public static BlockIdApiResult SendEvent(string url, string apiKey, string jsonPayload)
         {
@@ -98,7 +98,7 @@ namespace DXApplication1.BlockId
                     }
                     catch { }
 
-                    // Phân loại mã lỗi theo tài liệu BlockId:
+                    // Phân loại mã lỗi BlockId:
                     // 400 - 404: Lỗi dữ liệu sai, API key sai, subject không tồn tại -> Không tự động retry
                     // 429, 500, 502, 503, 504: Lỗi quá tải, server lỗi tạm thời -> Cho phép retry
                     if (result.StatusCode >= 400 && result.StatusCode <= 404)

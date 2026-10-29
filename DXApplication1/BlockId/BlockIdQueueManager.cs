@@ -69,7 +69,7 @@ namespace DXApplication1.BlockId
 
             EnsureDirectories();
             var config = BlockIdConfig.Instance;
-            if (!config.Enable) return null;
+            if (VarGlobal.McSMPrinting.EnablePlcKV || !config.Enable) return null;
 
             // Quy tắc 5: Khoảng trắng trong barcode bị bỏ đi
             string cleanBarcode = barcode.Trim().Replace(" ", "");
@@ -117,7 +117,7 @@ namespace DXApplication1.BlockId
 
             EnsureDirectories();
             var config = BlockIdConfig.Instance;
-            if (!config.Enable) return null;
+            if (VarGlobal.McSMPrinting.EnablePlcKV || !config.Enable) return null;
 
             string recordId = Guid.NewGuid().ToString();
             DateTimeOffset time = prodTime ?? DateTimeOffset.Now;
@@ -212,8 +212,9 @@ namespace DXApplication1.BlockId
                 {
                     EnsureDirectories();
                     var config = BlockIdConfig.Instance;
-                    if (!config.Enable || string.IsNullOrEmpty(config.ApiUrl))
+                    if (VarGlobal.McSMPrinting.EnablePlcKV || !config.Enable || string.IsNullOrEmpty(config.ApiUrl))
                     {
+                        LastStatus = VarGlobal.McSMPrinting.EnablePlcKV ? "KV ACTIVE" : "NOT USED";
                         Thread.Sleep(1000);
                         continue;
                     }
