@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,7 +18,6 @@ namespace DXApplication1.MachineCls
 
         public static void Thread_Init(ConnCfg conn)
         {
-            if (!VarGlobal.McSMPrinting.EnablePlcKV) return;
             mainThreadStart = true;
             ThreadPollingPLCKV = new Thread(() => ThreadPollingPLCKV_Process(conn));
             ThreadPollingPLCKV.Start();

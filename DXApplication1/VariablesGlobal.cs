@@ -1,4 +1,4 @@
-﻿using DXApplication1.Common;
+using DXApplication1.Common;
 using DXApplication1.MachineCls;
 using Newtonsoft.Json;
 using System;
@@ -65,11 +65,12 @@ namespace DXApplication1
 
         public static void InitAllThreadPollingPLC()
         {
-            /////McMicroEtchingNo3.CheckReInput("72019A-00023-012-2",null);
-            ////byte[] datas = new byte[] { 0x00, 0x00 };
-            ////string ree = Write_MultyDRegSigle_Binary3E("D700",1, datas);
-            ////string reeee = Read_DReg_Binary3E("D700",1);
             mainThreadStart = true;
+            try
+            {
+                VarGlobal.McSMPrinting.Read_Config();
+            }
+            catch { }
             
             if (Factory == "F1")
             {
@@ -84,12 +85,9 @@ namespace DXApplication1
                 #endregion
 
                 Thread.Sleep(100);
-                if (VarGlobal.McSMPrinting.EnablePlcKV)
-                {
-                    ConnCfg conn = new ConnCfg() { Enable = true, MachineType = "PLCKV8000", MachineID = "PLCKV8000", PlcIp = VarGlobal.McSMPrinting.PlcIpKV, PlcPort = VarGlobal.McSMPrinting.PlcPortKV, Factory = "F1", MachineName = "PLC KV" };
-                    ListConn.Add(conn);
-                    PLCKV_1_184Cls.Thread_Init(conn);
-                }
+                ConnCfg conn = new ConnCfg() { Enable = true, MachineType = "PLCKV8000", MachineID = "PLCKV8000", PlcIp = VarGlobal.McSMPrinting.PlcIpKV, PlcPort = VarGlobal.McSMPrinting.PlcPortKV, Factory = "F1", MachineName = "PLC KV" };
+                ListConn.Add(conn);
+                PLCKV_1_184Cls.Thread_Init(conn);
                 #endregion
             }
         }
@@ -100,10 +98,7 @@ namespace DXApplication1
             try
             {
                 SQLFunc.StopThreadPollingDB();
-                if (VarGlobal.McSMPrinting.EnablePlcKV)
-                {
-                    PLCKV_1_184Cls.Thread_Release();
-                }
+                PLCKV_1_184Cls.Thread_Release();
                 PLCSMPrintingCls.Thread_Release();
                 BCRSrx300Cls.Thread_Release();
                 BCRCognexCls.Thread_Release();
