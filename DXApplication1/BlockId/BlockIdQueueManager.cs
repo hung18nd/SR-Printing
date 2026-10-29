@@ -292,8 +292,8 @@ namespace DXApplication1.BlockId
 
                             PendingCount = Math.Max(0, PendingCount - 1);
 
-                            // Báo động lên giao diện
-                            OnBlockIdAlert?.Invoke($"BlockId trả về lỗi {result.StatusCode}: {result.ErrorMessage}. Vui lòng kiểm tra lại cấu hình!", "ERROR");
+                            // Alert UI
+                            OnBlockIdAlert?.Invoke($"BlockId API returned error {result.StatusCode}: {result.ErrorMessage}. Please verify configuration!", "ERROR");
                         }
                         else
                         {

@@ -136,7 +136,7 @@ namespace DXApplication1
                 {
                     this.BeginInvoke(new Action(() =>
                     {
-                        MessageBox.Show(alertMsg, "Canh bao BlockId API", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(alertMsg, "BlockId API Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }));
                 }
                 catch { }

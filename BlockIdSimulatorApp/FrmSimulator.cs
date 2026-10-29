@@ -46,15 +46,15 @@ namespace BlockIdSimulatorApp
 
         private void InitializeComponent()
         {
-            this.Text = "BlockId Server Simulator v1.0 (Máy Chủ Ảo Test Giao Thức BlockId Ingestion)";
+            this.Text = "BlockId Server Simulator v1.0 (Mock Ingestion Server)";
             this.Size = new Size(1000, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
 
-            // 1. GroupBox Máy chủ BlockId Ảo
+            // 1. GroupBox Mock Server Settings
             var grpServer = new GroupBox
             {
-                Text = "1. Cấu hình Máy Chủ BlockId Ảo (Mock Ingestion Server)",
+                Text = "1. BlockId Mock Ingestion Server Configuration",
                 Location = new Point(12, 10),
                 Size = new Size(960, 150)
             };
@@ -62,27 +62,27 @@ namespace BlockIdSimulatorApp
             var lblPort = new Label { Text = "Port:", Location = new Point(15, 30), AutoSize = true };
             numServerPort = new NumericUpDown { Location = new Point(55, 27), Width = 80, Minimum = 80, Maximum = 65535, Value = 18660 };
 
-            btnStartServer = new Button { Text = "BẬT Server Ảo", Location = new Point(145, 25), Size = new Size(120, 30), BackColor = Color.LightGreen, Font = new Font(this.Font, FontStyle.Bold) };
+            btnStartServer = new Button { Text = "START Server", Location = new Point(145, 25), Size = new Size(120, 30), BackColor = Color.LightGreen, Font = new Font(this.Font, FontStyle.Bold) };
             btnStartServer.Click += (s, e) => StartMockServer((int)numServerPort.Value);
 
-            btnStopServer = new Button { Text = "TẮT Server", Location = new Point(275, 25), Size = new Size(100, 30), Enabled = false, BackColor = Color.MistyRose };
+            btnStopServer = new Button { Text = "STOP Server", Location = new Point(275, 25), Size = new Size(100, 30), Enabled = false, BackColor = Color.MistyRose };
             btnStopServer.Click += (s, e) => StopMockServer();
 
-            lblServerStatus = new Label { Text = "Server: ĐANG TẮT", Location = new Point(390, 31), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold), ForeColor = Color.Red };
+            lblServerStatus = new Label { Text = "Server: STOPPED", Location = new Point(390, 31), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold), ForeColor = Color.Red };
 
-            var lblBehavior = new Label { Text = "Kịch bản phản hồi của Server Ảo:", Location = new Point(15, 75), AutoSize = true };
-            cbbServerBehavior = new ComboBox { Location = new Point(220, 72), Width = 520, DropDownStyle = ComboBoxStyle.DropDownList };
-            cbbServerBehavior.Items.Add("1. Bình thường (202 Accepted cho UUID mới, 200 Duplicate nếu gửi lại)");
-            cbbServerBehavior.Items.Add("2. Mất mạng / Treo Timeout (> 10s)");
-            cbbServerBehavior.Items.Add("3. Quá tải (HTTP 429 Too Many Requests)");
-            cbbServerBehavior.Items.Add("4. Máy chủ lỗi (HTTP 500 Internal Server Error)");
-            cbbServerBehavior.Items.Add("5. Lỗi Client (HTTP 400 Bad Request - Sai mã thông số)");
-            cbbServerBehavior.Items.Add("6. Lỗi bảo mật (HTTP 401 Unauthorized - Sai API Key)");
+            var lblBehavior = new Label { Text = "Server Response Behavior:", Location = new Point(15, 75), AutoSize = true };
+            cbbServerBehavior = new ComboBox { Location = new Point(190, 72), Width = 550, DropDownStyle = ComboBoxStyle.DropDownList };
+            cbbServerBehavior.Items.Add("1. Normal (202 Accepted for new UUID, 200 Duplicate for repeat)");
+            cbbServerBehavior.Items.Add("2. Network Disconnect / Timeout (> 10s)");
+            cbbServerBehavior.Items.Add("3. Overload (HTTP 429 Too Many Requests)");
+            cbbServerBehavior.Items.Add("4. Internal Server Error (HTTP 500)");
+            cbbServerBehavior.Items.Add("5. Client Error (HTTP 400 Bad Request - Invalid Parameter Code)");
+            cbbServerBehavior.Items.Add("6. Authentication Error (HTTP 401 Unauthorized - Invalid API Key)");
             cbbServerBehavior.SelectedIndex = 0;
 
             lblServerStats = new Label
             {
-                Text = "Địa chỉ Endpoint: http://127.0.0.1:18660/ingest/v1/events | Đã nhận: 0 | Mới: 0 | Trùng lặp: 0",
+                Text = "Endpoint: http://127.0.0.1:18660/ingest/v1/events | Total: 0 | New (202): 0 | Duplicate (200): 0",
                 Location = new Point(15, 115),
                 AutoSize = true,
                 Font = new Font(this.Font, FontStyle.Bold),
@@ -98,21 +98,21 @@ namespace BlockIdSimulatorApp
             grpServer.Controls.Add(cbbServerBehavior);
             grpServer.Controls.Add(lblServerStats);
 
-            // 2. GroupBox Công cụ phát sinh dữ liệu test nội bộ
+            // 2. GroupBox Independent Test Tools
             var grpTools = new GroupBox
             {
-                Text = "2. Công Cụ Test Server Độc Lập (Tự Bắn Dữ Liệu Mẫu Kiểm Tra Server)",
+                Text = "2. Independent Test Tools (Self Test Simulator Server)",
                 Location = new Point(12, 170),
                 Size = new Size(960, 75)
             };
 
-            btnSendSampleSingle = new Button { Text = "Bắn 1 gói mẫu (Test 1)", Location = new Point(15, 25), Size = new Size(180, 32) };
+            btnSendSampleSingle = new Button { Text = "Send 1 Sample Record", Location = new Point(15, 25), Size = new Size(180, 32) };
             btnSendSampleSingle.Click += (s, e) => SendSampleEvents(1);
 
-            btnSendSampleBatch10 = new Button { Text = "Bắn 10 gói mẫu liên tục", Location = new Point(205, 25), Size = new Size(180, 32) };
+            btnSendSampleBatch10 = new Button { Text = "Send 10 Sample Records", Location = new Point(205, 25), Size = new Size(180, 32) };
             btnSendSampleBatch10.Click += (s, e) => SendSampleEvents(10);
 
-            btnClearGrid = new Button { Text = "Xóa lịch sử bảng", Location = new Point(640, 25), Size = new Size(140, 32) };
+            btnClearGrid = new Button { Text = "Clear Table", Location = new Point(660, 25), Size = new Size(120, 32) };
             btnClearGrid.Click += (s, e) =>
             {
                 dgrReceivedEvents.Rows.Clear();
@@ -122,7 +122,7 @@ namespace BlockIdSimulatorApp
                 UpdateStats();
             };
 
-            btnExportCsv = new Button { Text = "Xuất ra file CSV", Location = new Point(790, 25), Size = new Size(150, 32) };
+            btnExportCsv = new Button { Text = "Export to CSV", Location = new Point(790, 25), Size = new Size(150, 32) };
             btnExportCsv.Click += BtnExportCsv_Click;
 
             grpTools.Controls.Add(btnSendSampleSingle);
@@ -130,8 +130,8 @@ namespace BlockIdSimulatorApp
             grpTools.Controls.Add(btnClearGrid);
             grpTools.Controls.Add(btnExportCsv);
 
-            // 3. DataGrid hiển thị dữ liệu thời gian thực
-            var lblGrid = new Label { Text = "3. Danh sách các bản ghi nhận được thời gian thực từ Phần Mềm Chính:", Location = new Point(12, 255), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) };
+            // 3. DataGrid
+            var lblGrid = new Label { Text = "3. Realtime Received Records from Main Application:", Location = new Point(12, 255), AutoSize = true, Font = new Font(this.Font, FontStyle.Bold) };
             dgrReceivedEvents = new DataGridView
             {
                 Location = new Point(12, 280),
@@ -152,12 +152,12 @@ namespace BlockIdSimulatorApp
 
         private void SetupDataGrid()
         {
-            dgrReceivedEvents.Columns.Add("colTime", "Thời gian nhận");
+            dgrReceivedEvents.Columns.Add("colTime", "Received Time");
             dgrReceivedEvents.Columns.Add("colId", "UUID (id)");
-            dgrReceivedEvents.Columns.Add("colBarcode", "Mã Barcode");
-            dgrReceivedEvents.Columns.Add("colSubject", "Mã máy");
-            dgrReceivedEvents.Columns.Add("colParams", "Thông số kỹ thuật (Values)");
-            dgrReceivedEvents.Columns.Add("colStatus", "Kết quả trả về");
+            dgrReceivedEvents.Columns.Add("colBarcode", "Barcode");
+            dgrReceivedEvents.Columns.Add("colSubject", "Machine ID");
+            dgrReceivedEvents.Columns.Add("colParams", "Technical Parameters (Values)");
+            dgrReceivedEvents.Columns.Add("colStatus", "Response Status");
 
             dgrReceivedEvents.Columns["colTime"].Width = 120;
             dgrReceivedEvents.Columns["colId"].Width = 220;
@@ -182,7 +182,7 @@ namespace BlockIdSimulatorApp
                 btnStopServer.Enabled = true;
                 numServerPort.Enabled = false;
 
-                lblServerStatus.Text = $"Server: ĐANG CHẠY (http://127.0.0.1:{port}/ingest/v1/events)";
+                lblServerStatus.Text = $"Server: RUNNING (http://127.0.0.1:{port}/ingest/v1/events)";
                 lblServerStatus.ForeColor = Color.Green;
                 UpdateStats();
 
@@ -190,7 +190,7 @@ namespace BlockIdSimulatorApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể mở server cổng {port}:\n{ex.Message}", "Lỗi khởi động Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Failed to bind server port {port}:\n{ex.Message}", "Server Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -203,7 +203,7 @@ namespace BlockIdSimulatorApp
             btnStopServer.Enabled = false;
             numServerPort.Enabled = true;
 
-            lblServerStatus.Text = "Server: ĐÃ DỪNG (Mô phỏng mất mạng)";
+            lblServerStatus.Text = "Server: STOPPED (Simulating Network Disconnection)";
             lblServerStatus.ForeColor = Color.Red;
         }
 
@@ -239,7 +239,7 @@ namespace BlockIdSimulatorApp
                 int behavior = 0;
                 this.Invoke(new Action(() => behavior = cbbServerBehavior.SelectedIndex));
 
-                if (behavior == 1) // Kịch bản Timeout > 10s
+                if (behavior == 1) // Timeout > 10s
                 {
                     Thread.Sleep(12000);
                     return;
@@ -249,31 +249,31 @@ namespace BlockIdSimulatorApp
                 string respBody = "";
                 string displayStatus = "202 Accepted";
 
-                if (behavior == 2) // 429 Rate Limit
+                if (behavior == 2) // 429
                 {
                     statusCode = 429;
                     respBody = "{\"error\":\"Too Many Requests\"}";
                     displayStatus = "429 Rate Limit";
                 }
-                else if (behavior == 3) // 500 Server Error
+                else if (behavior == 3) // 500
                 {
                     statusCode = 500;
                     respBody = "{\"error\":\"Internal Server Error\"}";
                     displayStatus = "500 Server Error";
                 }
-                else if (behavior == 4) // 400 Bad Request
+                else if (behavior == 4) // 400
                 {
                     statusCode = 400;
                     respBody = "{\"error\":\"Bad Request: Invalid Parameter Code\"}";
                     displayStatus = "400 Bad Request";
                 }
-                else if (behavior == 5) // 401 Unauthorized
+                else if (behavior == 5) // 401
                 {
                     statusCode = 401;
                     respBody = "{\"error\":\"Unauthorized: Wrong API Key\"}";
                     displayStatus = "401 Unauthorized";
                 }
-                else // 0: Normal (202 hoặc 200 Duplicate)
+                else // 0: Normal
                 {
                     string recId = "";
                     string barcode = "";
@@ -356,7 +356,7 @@ namespace BlockIdSimulatorApp
         private void UpdateStats()
         {
             int port = (int)numServerPort.Value;
-            lblServerStats.Text = $"Địa chỉ Endpoint: http://127.0.0.1:{port}/ingest/v1/events | Tổng nhận: {_totalReceived + _totalDuplicates} | Mới (202): {_totalReceived} | Trùng lặp (200): {_totalDuplicates}";
+            lblServerStats.Text = $"Endpoint: http://127.0.0.1:{port}/ingest/v1/events | Total: {_totalReceived + _totalDuplicates} | New (202): {_totalReceived} | Duplicate (200): {_totalDuplicates}";
         }
 
         #endregion
@@ -369,7 +369,7 @@ namespace BlockIdSimulatorApp
         {
             if (!_isServerRunning)
             {
-                MessageBox.Show("Vui lòng BẬT Server ảo trước khi bắn dữ liệu mẫu!", "Chưa bật server", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please START the mock server first!", "Server Stopped", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -431,7 +431,7 @@ namespace BlockIdSimulatorApp
         {
             if (dgrReceivedEvents.Rows.Count == 0)
             {
-                MessageBox.Show("Chưa có dữ liệu nào để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No data available to export!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -444,17 +444,17 @@ namespace BlockIdSimulatorApp
                     try
                     {
                         var sb = new StringBuilder();
-                        sb.AppendLine("ThoiGian,UUID,Barcode,MaMay,ThongSo,KetQua");
+                        sb.AppendLine("ReceivedTime,UUID,Barcode,MachineId,Parameters,Status");
                         foreach (DataGridViewRow row in dgrReceivedEvents.Rows)
                         {
                             sb.AppendLine($"\"{row.Cells[0].Value}\",\"{row.Cells[1].Value}\",\"{row.Cells[2].Value}\",\"{row.Cells[3].Value}\",\"{row.Cells[4].Value}\",\"{row.Cells[5].Value}\"");
                         }
                         File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
-                        MessageBox.Show("Xuất file CSV thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Export to CSV succeeded!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi xuất file: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Failed to export file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

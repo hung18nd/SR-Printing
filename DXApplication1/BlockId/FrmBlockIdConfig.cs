@@ -51,7 +51,7 @@ namespace DXApplication1.BlockId
             this.chkShowKey = new CheckBox();
 
             // Form
-            this.Text = "Cấu hình BlockId API Ingestion Protocol v1.0";
+            this.Text = "BlockId API Ingestion Protocol v1.0 Configuration";
             this.Size = new Size(720, 620);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -61,41 +61,39 @@ namespace DXApplication1.BlockId
             int leftLabel = 20;
             int leftBox = 160;
             int boxWidth = 500;
-            int top = 20;
-            int rowHeight = 32;
 
             // Group 1: General
             var grpGeneral = new GroupBox
             {
-                Text = "1. Cấu hình kết nối BlockId",
+                Text = "1. BlockId Connection Settings",
                 Location = new Point(15, 10),
                 Size = new Size(675, 230)
             };
 
-            chkEnable.Text = "Kích hoạt gửi dữ liệu sang BlockId";
+            chkEnable.Text = "Enable BlockId Data Ingestion";
             chkEnable.Location = new Point(leftBox, 22);
             chkEnable.AutoSize = true;
             chkEnable.Font = new Font(this.Font, FontStyle.Bold);
 
-            AddRow(grpGeneral, "Địa chỉ API (URL):", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "API Key (Bí mật):", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
+            AddRow(grpGeneral, "API Endpoint (URL):", txtApiUrl, 50, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "API Key (Secret):", txtApiKey, 82, leftLabel, leftBox, boxWidth - 90);
             txtApiKey.UseSystemPasswordChar = true;
 
-            chkShowKey.Text = "Hiện Key";
+            chkShowKey.Text = "Show Key";
             chkShowKey.Location = new Point(leftBox + boxWidth - 80, 82);
             chkShowKey.AutoSize = true;
             chkShowKey.CheckedChanged += (s, e) => { txtApiKey.UseSystemPasswordChar = !chkShowKey.Checked; };
             grpGeneral.Controls.Add(chkShowKey);
 
-            AddRow(grpGeneral, "Mã máy (Subject):", txtMachineCode, 114, leftLabel, leftBox, boxWidth);
-            AddRow(grpGeneral, "Nguồn gửi (Source):", txtSourceUrn, 146, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "Machine ID (Subject):", txtMachineCode, 114, leftLabel, leftBox, boxWidth);
+            AddRow(grpGeneral, "Client Source (URN):", txtSourceUrn, 146, leftLabel, leftBox, boxWidth);
 
-            var lblMode = new Label { Text = "Chế độ gửi:", Location = new Point(leftLabel, 180), AutoSize = true };
+            var lblMode = new Label { Text = "Send Mode:", Location = new Point(leftLabel, 180), AutoSize = true };
             cbbSendMode.Location = new Point(leftBox, 177);
-            cbbSendMode.Width = 300;
+            cbbSendMode.Width = 340;
             cbbSendMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbbSendMode.Items.Add("Cách 1: Từng Barcode (Khuyên dùng cho SR Printing)");
-            cbbSendMode.Items.Add("Cách 2: Theo Khay / Xe Trolley");
+            cbbSendMode.Items.Add("Mode 1: Single Barcode (Recommended for SR Printing)");
+            cbbSendMode.Items.Add("Mode 2: By Tray / Trolley");
             grpGeneral.Controls.Add(lblMode);
             grpGeneral.Controls.Add(cbbSendMode);
             grpGeneral.Controls.Add(chkEnable);
@@ -103,30 +101,30 @@ namespace DXApplication1.BlockId
             // Group 2: Param Codes
             var grpCodes = new GroupBox
             {
-                Text = "2. Mã thông số BlockId cấp (Parameter Code Mapping)",
+                Text = "2. BlockId Parameter Code Mapping",
                 Location = new Point(15, 250),
                 Size = new Size(675, 130)
             };
 
-            AddRow(grpCodes, "Thời gian in (Code):", txtCodePrintingTime, 25, 20, 160, 160);
-            AddRow(grpCodes, "Áp lực gạt (Code):", txtCodeSqueezePressure, 25, 350, 480, 170);
+            AddRow(grpCodes, "Printing Time (Code):", txtCodePrintingTime, 25, 20, 160, 160);
+            AddRow(grpCodes, "Squeeze Press (Code):", txtCodeSqueezePressure, 25, 350, 480, 170);
 
-            AddRow(grpCodes, "Tốc độ in (Code):", txtCodeSqueezeSpeed, 60, 20, 160, 160);
-            AddRow(grpCodes, "Khoảng hở Gap (Code):", txtCodeGap, 60, 350, 480, 170);
+            AddRow(grpCodes, "Squeeze Speed (Code):", txtCodeSqueezeSpeed, 60, 20, 160, 160);
+            AddRow(grpCodes, "Snap-off Gap (Code):", txtCodeGap, 60, 350, 480, 170);
 
-            AddRow(grpCodes, "Áp suất khí (Code):", txtCodeAirPressure, 95, 20, 160, 160);
+            AddRow(grpCodes, "Air Pressure (Code):", txtCodeAirPressure, 95, 20, 160, 160);
 
             // Group 3: Test & Log
             var grpTest = new GroupBox
             {
-                Text = "3. Kiểm tra kết nối & Phản hồi API",
+                Text = "3. Connection Test & API Response",
                 Location = new Point(15, 390),
                 Size = new Size(675, 135)
             };
 
-            btnTestConnection.Text = "Kiểm tra kết nối API (Test Connection)";
+            btnTestConnection.Text = "Test Connection";
             btnTestConnection.Location = new Point(20, 25);
-            btnTestConnection.Size = new Size(230, 30);
+            btnTestConnection.Size = new Size(200, 30);
             btnTestConnection.Click += BtnTestConnection_Click;
             grpTest.Controls.Add(btnTestConnection);
 
@@ -138,12 +136,12 @@ namespace DXApplication1.BlockId
             grpTest.Controls.Add(txtTestLog);
 
             // Buttons
-            btnSave.Text = "Lưu cấu hình";
+            btnSave.Text = "Save Config";
             btnSave.Location = new Point(480, 535);
             btnSave.Size = new Size(100, 32);
             btnSave.Click += BtnSave_Click;
 
-            btnCancel.Text = "Đóng";
+            btnCancel.Text = "Close";
             btnCancel.Location = new Point(590, 535);
             btnCancel.Size = new Size(100, 32);
             btnCancel.Click += (s, e) => this.Close();
@@ -198,14 +196,14 @@ namespace DXApplication1.BlockId
             cfg.CodeMachineAirPressure = txtCodeAirPressure.Text.Trim();
 
             cfg.Save();
-            MessageBox.Show("Đã lưu cấu hình BlockId thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("BlockId configuration saved successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
         }
 
         private void BtnTestConnection_Click(object sender, EventArgs e)
         {
             btnTestConnection.Enabled = false;
-            txtTestLog.Text = "Đang gửi dữ liệu mẫu lên BlockId API...";
+            txtTestLog.Text = "Sending test payload to BlockId API...";
 
             string url = txtApiUrl.Text.Trim();
             string apiKey = txtApiKey.Text.Trim();
@@ -219,11 +217,11 @@ namespace DXApplication1.BlockId
                     btnTestConnection.Enabled = true;
                     if (res.IsSuccess)
                     {
-                        txtTestLog.Text = $"[THÀNH CÔNG] HTTP Status: {res.StatusCode} ({(res.IsDuplicate ? "Duplicate / Đã có" : "Accepted")})\r\nPhản hồi: {res.ResponseBody}";
+                        txtTestLog.Text = $"[SUCCESS] HTTP Status: {res.StatusCode} ({(res.IsDuplicate ? "Duplicate / Already Accepted" : "Accepted")})\r\nResponse: {res.ResponseBody}";
                     }
                     else
                     {
-                        txtTestLog.Text = $"[THẤT BẠI] HTTP Status: {res.StatusCode}\r\nChi tiết: {res.ErrorMessage}\r\nPhản hồi: {res.ResponseBody}";
+                        txtTestLog.Text = $"[FAILED] HTTP Status: {res.StatusCode}\r\nDetails: {res.ErrorMessage}\r\nResponse: {res.ResponseBody}";
                     }
                 }));
             });
