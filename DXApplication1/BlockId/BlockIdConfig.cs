@@ -10,8 +10,8 @@ namespace DXApplication1.BlockId
 
         public bool Enable { get; set; } = false;
         public bool EnablePlcKV { get; set; } = true;
-        public string ApiUrl { get; set; } = "http://10.126.1.245:660/ingest/v1/events";
-        public string ApiKey { get; set; } = "";
+        public string ApiUrl { get; set; } = "http://10.126.16.78:660/ingest/v1/events";
+        public string ApiKey { get; set; } = "bik_-hpr1fdj4c2bUR2sHy4S_O7efErPebI1YAFkhItSigo";
         public string MachineCode { get; set; } = "";
         public string Source { get; set; } = "urn:blockid:client:sr-baking";
         public int SendMode { get; set; } = 1; // 1: Từng Barcode, 2: Theo Khay
@@ -41,8 +41,8 @@ namespace DXApplication1.BlockId
                     IniFile ini = new IniFile(ConfigPath);
                     cfg.Enable = ini.IniReadValue("BLOCKID", "Enable", "false").ToLower() == "true";
                     cfg.EnablePlcKV = ini.IniReadValue("BLOCKID", "EnablePlcKV", "true").ToLower() == "true";
-                    cfg.ApiUrl = ini.IniReadValue("BLOCKID", "ApiUrl", "http://10.126.1.245:660/ingest/v1/events");
-                    cfg.ApiKey = ini.IniReadValue("BLOCKID", "ApiKey", "");
+                    cfg.ApiUrl = ini.IniReadValue("BLOCKID", "ApiUrl", "http://10.126.16.78:660/ingest/v1/events");
+                    cfg.ApiKey = ini.IniReadValue("BLOCKID", "ApiKey", "bik_-hpr1fdj4c2bUR2sHy4S_O7efErPebI1YAFkhItSigo");
                     cfg.MachineCode = ini.IniReadValue("BLOCKID", "MachineCode", "");
                     cfg.Source = ini.IniReadValue("BLOCKID", "Source", "urn:blockid:client:sr-baking");
                     cfg.SendMode = int.TryParse(ini.IniReadValue("BLOCKID", "SendMode", "1"), out int mode) ? mode : 1;

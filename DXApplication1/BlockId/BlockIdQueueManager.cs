@@ -71,11 +71,9 @@ namespace DXApplication1.BlockId
             var config = BlockIdConfig.Instance;
             if (VarGlobal.McSMPrinting.EnablePlcKV || !config.Enable) return null;
 
-            // Quy tắc 5: Khoảng trắng trong barcode bị bỏ đi
             string cleanBarcode = barcode.Trim().Replace(" ", "");
             if (cleanBarcode.Length > 128) cleanBarcode = cleanBarcode.Substring(0, 128);
 
-            // Quy tắc 1: Mỗi bản ghi một id riêng (UUID)
             string recordId = Guid.NewGuid().ToString();
             DateTimeOffset time = prodTime ?? DateTimeOffset.Now;
 
