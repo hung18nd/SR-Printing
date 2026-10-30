@@ -64,8 +64,19 @@ namespace DXApplication1.MachineCls
                                 PLCKV.Close();
                             }
                             PLCKV = new TcpClient();
-                            PLCKV.Connect(VarGlobal.McSMPrinting.PlcIpKV, VarGlobal.McSMPrinting.PlcPortKV);
-                            if (PLCKV.Connected) isConnected = true;
+                            var ar = PLCKV.BeginConnect(VarGlobal.McSMPrinting.PlcIpKV, VarGlobal.McSMPrinting.PlcPortKV, null, null);
+                            bool success = ar.AsyncWaitHandle.WaitOne(800, false);
+                            if (success && PLCKV.Connected)
+                            {
+                                PLCKV.EndConnect(ar);
+                                isConnected = true;
+                            }
+                            else
+                            {
+                                PLCKV.Close();
+                                isConnected = false;
+                            }
+
                         }
                         catch (Exception)
                         {
@@ -158,7 +169,7 @@ namespace DXApplication1.MachineCls
                     conn.ErrorCode = VarGlobal.E001_DISCONNECT_PLC;
                     conn.Status = VarGlobal.E001_DISCONNECT;
                     VarGlobal.McSMPrinting.IsConnectedPlcKV = false;
-                    Thread.Sleep(2000);
+                    Thread.Sleep(500);
                 }
             }//End of while true
 
