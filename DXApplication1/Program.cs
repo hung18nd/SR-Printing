@@ -46,7 +46,7 @@ namespace DXApplication1
                 SQLFunc.InitGlobalVarial();
 
                 VarGlobal.InitAllThreadPollingPLC();
-                BlockId.BlockIdQueueManager.StartWorker();
+            
                 Application.Run(new FrmMain());
 
                 VarGlobal.StopAllThreadPollingPLC();

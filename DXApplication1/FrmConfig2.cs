@@ -27,7 +27,7 @@ namespace DXApplication1
 
         private void ReloadConfig()
         {
-            //test
+            
             txtMachineID.Text = VarGlobal.McID;
             txtPLCIp.Text = VarGlobal.McSMPrinting.PlcIp;
             txtPLCPort.Text = VarGlobal.McSMPrinting.PlcPort.ToString();
@@ -228,16 +228,14 @@ namespace DXApplication1
                 string user = txtServerUser.Text.Trim();
                 string pass = txtServerPass.Text.Trim();
 
-                // 1. Luu thong tin vao Windows Credential Manager
                 if (!string.IsNullOrEmpty(host))
                 {
                     AutoUpdateManager.SaveCredentialsToWindowsVault(host, user, pass);
                 }
 
-                // 2. Mo Explorer de Windows thuc hien dang nhap va ghi nho (Remember)
                 Process.Start("explorer.exe", path);
 
-                MessageBox.Show("Đã mở thư mục Server trong Windows Explorer.\r\n\r\nNếu Windows hiện hộp thoại đăng nhập mạng, bạn hãy nhập User/Pass và tích vào ô [Remember my credentials / Ghi nhớ thông tin] để Windows lưu vĩnh viễn!", "HƯỚNG DẪN GHI NHỚ TÀI KHOẢN", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Đã mở thư mục Server trong Windows Explorer.\r\n\r\nNếu Windows hiện hộp thoại đăng nhập mạng, bạn hãy nhập User/Pass và tích vào ô [Remember my credentials] để Windows lưu vĩnh viễn!", "HƯỚNG DẪN GHI NHỚ TÀI KHOẢN", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

@@ -70,20 +70,21 @@ namespace DXApplication1
             ////string ree = Write_MultyDRegSigle_Binary3E("D700",1, datas);
             ////string reeee = Read_DReg_Binary3E("D700",1);
             mainThreadStart = true;
-            
+
             //if (Factory == "F1")
             //{
-                
-                #region machine
 
-                #region SM Printing
-                PLCSMPrintingCls.Thread_Init();
-                BCRSrx300Cls.Thread_Init();
-                BCRCognexCls.Thread_Init();
-                SQLFunc.InitThreadPollingDB();
-                #endregion
+            #region machine
 
-                Thread.Sleep(100);
+            #region SM Printing
+            PLCSMPrintingCls.Thread_Init();
+            BCRSrx300Cls.Thread_Init();
+            BCRCognexCls.Thread_Init();
+            VarGlobal.IsConnectedDB = SQLFunc.TestConnection() ? true : false;
+            BlockId.BlockIdQueueManager.StartWorker();
+            #endregion
+
+            Thread.Sleep(100);
             if (VarGlobal.McSMPrinting.EnablePlcKV)
             {
                 ConnCfg conn = new ConnCfg() { Enable = true, MachineType = "PLCKV8000", MachineID = "PLCKV8000", PlcIp = VarGlobal.McSMPrinting.PlcIpKV, PlcPort = VarGlobal.McSMPrinting.PlcPortKV, Factory = "F1", MachineName = "PLC KV" };
@@ -107,6 +108,7 @@ namespace DXApplication1
                 PLCSMPrintingCls.Thread_Release();
                 BCRSrx300Cls.Thread_Release();
                 BCRCognexCls.Thread_Release();
+                BlockId.BlockIdQueueManager.StopWorker();
             }
             catch (Exception)
             {
@@ -368,7 +370,7 @@ namespace DXApplication1
             string addr = Conv.atoi32(address).ToString("X2").PadLeft(6, '0');
             string valH = "";
             string leng = (datas.Length + 12).ToString("X2").PadLeft(4, '0'); ;
-            for (int i = 0; i< datas.Length; i++) 
+            for (int i = 0; i < datas.Length; i++)
             {
                 valH += datas[i].ToString("X2");
             }
@@ -592,7 +594,7 @@ namespace DXApplication1
                 Debug.WriteLine(ex.ToString());
             }
         }
-        public static void SaveReportLog2(string machine,string text, string text2="")
+        public static void SaveReportLog2(string machine, string text, string text2 = "")
         {
             string MyPath = SavePath;
             string time = DateTime.Now.ToString("yyyyMMdd-HHmmss");
@@ -600,7 +602,7 @@ namespace DXApplication1
             {
                 if (!Directory.Exists(MyPath)) Directory.CreateDirectory(MyPath);
                 string MyPath2 = MyPath;
-                MyPath += @"\" + "[" + machine + "]" +"_" + time + ".csv";
+                MyPath += @"\" + "[" + machine + "]" + "_" + time + ".csv";
                 string MyFile2 = MyPath2 + @"\" + "[" + machine + "]" + "_" + time + ".txt"; ;
                 if (File.Exists(MyPath) == false)
                 {
@@ -609,7 +611,7 @@ namespace DXApplication1
                     sBuff += $"{text}";
                     File.WriteAllText(MyPath, sBuff);
                 }
-                if (File.Exists(MyFile2) == false && text2.Length>0)
+                if (File.Exists(MyFile2) == false && text2.Length > 0)
                 {
                     File.WriteAllText(MyFile2, text2);
                 }
@@ -624,7 +626,7 @@ namespace DXApplication1
         {
             bool ret = false;
             if (blockID.Length >= 12 && blockID != "ERROR" && blockID != "REORR") ret = true;
-                return ret;
+            return ret;
         }
 
         public static bool CheckMixing(string machineID, string factory, string blockID, ItemFromPlus[] arrItem, bool enableMixing, int blockIdIndex = 0)
@@ -801,7 +803,7 @@ namespace DXApplication1
         public static string GetMessRpt(ItemFromPlus[] arrItem)
         {
             string res = "";
-            for(int i = 0; i< arrItem.Length; i++)
+            for (int i = 0; i < arrItem.Length; i++)
             {
                 if (res.Length > 0) res += ",";
                 res += $"Item From PlusA ({i + 1})[{arrItem[i].ItemCode};{arrItem[i].ItemLot}]";
@@ -833,7 +835,7 @@ namespace DXApplication1
             return ret;
         }
 
-        private  static void HandleKeyEvent(object sender, AuthenticationPromptEventArgs e)
+        private static void HandleKeyEvent(object sender, AuthenticationPromptEventArgs e)
         {
             foreach (AuthenticationPrompt prompt in e.Prompts)
             {
@@ -843,7 +845,7 @@ namespace DXApplication1
                 }
             }
         }
-        public  static bool FileUploadSFTP(string filepath, string filename)
+        public static bool FileUploadSFTP(string filepath, string filename)
         {
             bool ret = false;
             var host = FTPHost;
@@ -887,7 +889,7 @@ namespace DXApplication1
             {
                 Global.WriteLogFile($"Copy file SFTP error: {FTPHost} {username} {FTPPass} {SavePathFTP}" + ex.Message);
             }
-            
+
             return ret;
         }
         public static bool FileUploadSFTPUpdate(string filepath, string filename)

@@ -748,7 +748,7 @@ namespace DXApplication1
                                     else
                                     {
                                         SQLFunc.IsConnected = false;
-                                    //    VarGlobal.IsConnectedDB = false;
+                                       VarGlobal.IsConnectedDB = false;
                                         break;
                                     }
                                 }

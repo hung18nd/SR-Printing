@@ -310,7 +310,7 @@ namespace DXApplication1.Common
         {
             //InitGlobalVarial();
             bool bCommOK = false;
-            Global.WriteLogFileSQL("[ExecuteNonQuery] - " + "\r\nQueryString: " + query_string);
+        //    Global.WriteLogFileSQL("[ExecuteNonQuery] - " + "\r\nQueryString: " + query_string);
             SqlConnection myConnection = new SqlConnection(connString);
             try
             {
@@ -326,7 +326,7 @@ namespace DXApplication1.Common
             {
                 IsConnected = false;
                 VarGlobal.IsConnectedDB = false;
-                //Global.WriteLogFile("[ExecuteNonQuery] - " + ex.ToString() + "\r\n" + query_string);
+                Global.WriteLogFileSQL("[ExecuteNonQuery] - " + ex.ToString() + "\r\n" + query_string);
                 //if (ex.Number == 2627) //Violation of %ls constraint '%.*ls'. Cannot insert duplicate key in object '%.*ls'.
                 //    MessageBox.Show(ex.Message);
             }
