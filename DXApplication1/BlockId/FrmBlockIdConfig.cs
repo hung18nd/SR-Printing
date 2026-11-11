@@ -45,7 +45,8 @@ namespace DXApplication1.BlockId
             chkEnable.Checked = cfg.Enable;
             txtApiUrl.Text = cfg.ApiUrl;
             txtApiKey.Text = cfg.ApiKey;
-            txtMachineCode.Text = !string.IsNullOrEmpty(cfg.MachineCode) ? cfg.MachineCode : VarGlobal.McID;
+            txtMachineCode.Text = VarGlobal.McID;
+            txtMachineCode.ReadOnly = true;
             txtSourceUrn.Text = cfg.Source;
             cbbSendMode.SelectedIndex = (cfg.SendMode == 2) ? 1 : 0;
 
@@ -63,7 +64,10 @@ namespace DXApplication1.BlockId
             cfg.Enable = chkEnable.Checked;
             cfg.ApiUrl = txtApiUrl.Text.Trim();
             cfg.ApiKey = txtApiKey.Text.Trim();
-            cfg.MachineCode = txtMachineCode.Text.Trim();
+            if (!string.IsNullOrEmpty(txtMachineCode.Text.Trim()))
+            {
+                VarGlobal.McID = txtMachineCode.Text.Trim();
+            }
             cfg.Source = txtSourceUrn.Text.Trim();
             cfg.SendMode = (cbbSendMode.SelectedIndex == 1) ? 2 : 1;
 
@@ -93,7 +97,7 @@ namespace DXApplication1.BlockId
 
             string url = txtApiUrl.Text.Trim();
             string apiKey = txtApiKey.Text.Trim();
-            string mc = txtMachineCode.Text.Trim();
+            string mc = VarGlobal.McID;
 
             Task.Run(() =>
             {

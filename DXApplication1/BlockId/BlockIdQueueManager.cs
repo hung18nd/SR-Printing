@@ -77,7 +77,7 @@ namespace DXApplication1.BlockId
             string recordId = Guid.NewGuid().ToString();
             DateTimeOffset time = prodTime ?? DateTimeOffset.Now;
 
-            string subject = !string.IsNullOrEmpty(config.MachineCode) ? config.MachineCode : (machineId ?? "LINE01");
+            string subject = !string.IsNullOrEmpty(VarGlobal.McID) ? VarGlobal.McID : (machineId ?? "LINE01");
 
             var cloudEvent = new BlockIdCloudEvent<BlockIdRecordData>
             {
@@ -86,7 +86,7 @@ namespace DXApplication1.BlockId
                 Id = recordId,
                 Source = config.Source,
                 Subject = subject,
-                Time = time.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
+                Time = config.SendEventTime ? time.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture) : null,
                 Data = new BlockIdRecordData
                 {
                     Barcode = cleanBarcode,
@@ -128,7 +128,7 @@ namespace DXApplication1.BlockId
 
             if (cleanBarcodes.Count == 0) return null;
 
-            string subject = !string.IsNullOrEmpty(config.MachineCode) ? config.MachineCode : (machineId ?? "LINE01");
+            string subject = !string.IsNullOrEmpty(VarGlobal.McID) ? VarGlobal.McID : (machineId ?? "LINE01");
 
             var cloudEvent = new BlockIdCloudEvent<BlockIdTrayData>
             {
@@ -137,7 +137,7 @@ namespace DXApplication1.BlockId
                 Id = recordId,
                 Source = config.Source,
                 Subject = subject,
-                Time = time.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
+                Time = config.SendEventTime ? time.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture) : null,
                 Data = new BlockIdTrayData
                 {
                     TrayId = string.IsNullOrEmpty(trayId) ? null : trayId.Trim(),
@@ -187,11 +187,11 @@ namespace DXApplication1.BlockId
             if (!string.IsNullOrEmpty(config.CodeSqueezeDistFinish))
                 list.Add(new BlockIdParamValue(config.CodeSqueezeDistFinish, param.SqueezePringtingDistanceFinish));
 
-            if (!string.IsNullOrEmpty(config.CodeGap))
-                list.Add(new BlockIdParamValue(config.CodeGap, param.Gap));
+            //if (!string.IsNullOrEmpty(config.CodeGap))
+            //    list.Add(new BlockIdParamValue(config.CodeGap, param.Gap));
 
             if (!string.IsNullOrEmpty(config.CodeMachineAirPressure))
-                list.Add(new BlockIdParamValue(config.CodeMachineAirPressure, param.MachineAirPressure));
+                list.Add(new BlockIdParamValue(config.CodeMachineAirPressure, (double)(Conv.atod(param.MachineAirPressure)/1000)));
 
             return list;
         }
@@ -303,7 +303,7 @@ namespace DXApplication1.BlockId
 
                             Thread.Sleep(retryDelaySec * 1000);
                             retryDelaySec = Math.Min(retryDelaySec * 2, 60); // Tăng gấp đôi, tối đa 60s
-                            break; // Dừng vòng lặp file hiện tại để thử lại từ đầu hàng đợi
+                            break; 
                         }
                     }
                 }
@@ -324,7 +324,7 @@ namespace DXApplication1.BlockId
         /// <summary>
         /// Gửi ngay một bản ghi test không qua pending queue để kiểm tra kết nối API
         /// </summary>
-        public static BlockIdApiResult TestConnection(string url, string apiKey, string machineCode)
+        public static BlockIdApiResult TestConnection(string url, string apiKey, string machineId = null)
         {
             var config = BlockIdConfig.Instance;
             string testRecordId = Guid.NewGuid().ToString();
@@ -335,8 +335,8 @@ namespace DXApplication1.BlockId
                 Type = "vn.blockid.production.record.v1",
                 Id = testRecordId,
                 Source = config.Source,
-                Subject = !string.IsNullOrEmpty(machineCode) ? machineCode : "TEST_LINE01",
-                Time = DateTimeOffset.Now.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
+                Subject = !string.IsNullOrEmpty(machineId) ? machineId : (!string.IsNullOrEmpty(VarGlobal.McID) ? VarGlobal.McID : "TEST_LINE01"),
+                Time = config.SendEventTime ? DateTimeOffset.Now.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture) : null,
                 Data = new BlockIdRecordData
                 {
                     Barcode = "TEST_SAMPLE_001",

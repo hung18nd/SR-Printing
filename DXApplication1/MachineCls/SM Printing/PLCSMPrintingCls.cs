@@ -23,11 +23,25 @@ namespace DXApplication1.MachineCls.SM_Printing
             VarGlobal.McSMPrinting.Read_LastBlockIDs();
             mainThreadStart = true;
             ThreadPollingPLC = new Thread(() => ThreadPollingPLC_Process());
+            ThreadPollingPLC.IsBackground = true;
             ThreadPollingPLC.Start();
         }
         public static void Thread_Release()
         {
             mainThreadStart = false;
+            try
+            {
+                if (PLC != null) PLC.Close();
+            }
+            catch { }
+            try
+            {
+                if (ThreadPollingPLC != null && ThreadPollingPLC.IsAlive)
+                {
+                    ThreadPollingPLC.Abort();
+                }
+            }
+            catch { }
         }
 
         #region PLC PROCESS

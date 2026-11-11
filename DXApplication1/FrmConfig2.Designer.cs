@@ -60,6 +60,16 @@ namespace DXApplication1
             this.cbbBCRSelect = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.btnChangePassword = new DevExpress.XtraEditors.SimpleButton();
+            this.chkAutoCheckUpdate = new System.Windows.Forms.CheckBox();
+            this.lblUpdatePath = new System.Windows.Forms.Label();
+            this.txtServerUpdatePath = new System.Windows.Forms.TextBox();
+            this.btnBrowseUpdatePath = new DevExpress.XtraEditors.SimpleButton();
+            this.btnTestUpdatePath = new DevExpress.XtraEditors.SimpleButton();
+            this.lblServerUser = new System.Windows.Forms.Label();
+            this.txtServerUser = new System.Windows.Forms.TextBox();
+            this.lblServerPass = new System.Windows.Forms.Label();
+            this.txtServerPass = new System.Windows.Forms.TextBox();
+            this.btnOpenServerFolder = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumBlock)).BeginInit();
             this.SuspendLayout();
             // 
@@ -267,7 +277,7 @@ namespace DXApplication1
             // 
             this.btnSave.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.Appearance.Options.UseFont = true;
-            this.btnSave.Location = new System.Drawing.Point(429, 357);
+            this.btnSave.Location = new System.Drawing.Point(429, 450);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(219, 56);
             this.btnSave.TabIndex = 144;
@@ -278,7 +288,7 @@ namespace DXApplication1
             // 
             this.btnReload.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReload.Appearance.Options.UseFont = true;
-            this.btnReload.Location = new System.Drawing.Point(132, 357);
+            this.btnReload.Location = new System.Drawing.Point(132, 450);
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(219, 56);
             this.btnReload.TabIndex = 145;
@@ -387,12 +397,122 @@ namespace DXApplication1
             this.btnChangePassword.Text = "CHANGE PASSWORD";
             this.btnChangePassword.Click += new System.EventHandler(this.btnChangePassword_Click);
             // 
+            // chkAutoCheckUpdate
+            // 
+            this.chkAutoCheckUpdate.AutoSize = true;
+            this.chkAutoCheckUpdate.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAutoCheckUpdate.ForeColor = System.Drawing.Color.DarkBlue;
+            this.chkAutoCheckUpdate.Location = new System.Drawing.Point(132, 335);
+            this.chkAutoCheckUpdate.Name = "chkAutoCheckUpdate";
+            this.chkAutoCheckUpdate.Size = new System.Drawing.Size(262, 18);
+            this.chkAutoCheckUpdate.TabIndex = 154;
+            this.chkAutoCheckUpdate.Text = "Tự động kiểm tra cập nhật phần mềm";
+            this.chkAutoCheckUpdate.UseVisualStyleBackColor = true;
+            // 
+            // lblUpdatePath
+            // 
+            this.lblUpdatePath.AutoSize = true;
+            this.lblUpdatePath.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdatePath.Location = new System.Drawing.Point(16, 375);
+            this.lblUpdatePath.Name = "lblUpdatePath";
+            this.lblUpdatePath.Size = new System.Drawing.Size(107, 13);
+            this.lblUpdatePath.TabIndex = 155;
+            this.lblUpdatePath.Text = "Đường dẫn Server:";
+            // 
+            // txtServerUpdatePath
+            // 
+            this.txtServerUpdatePath.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtServerUpdatePath.Location = new System.Drawing.Point(132, 371);
+            this.txtServerUpdatePath.Name = "txtServerUpdatePath";
+            this.txtServerUpdatePath.Size = new System.Drawing.Size(430, 22);
+            this.txtServerUpdatePath.TabIndex = 156;
+            // 
+            // btnBrowseUpdatePath
+            // 
+            this.btnBrowseUpdatePath.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBrowseUpdatePath.Appearance.Options.UseFont = true;
+            this.btnBrowseUpdatePath.Location = new System.Drawing.Point(572, 368);
+            this.btnBrowseUpdatePath.Name = "btnBrowseUpdatePath";
+            this.btnBrowseUpdatePath.Size = new System.Drawing.Size(75, 28);
+            this.btnBrowseUpdatePath.TabIndex = 157;
+            this.btnBrowseUpdatePath.Text = "Chọn...";
+            this.btnBrowseUpdatePath.Click += new System.EventHandler(this.btnBrowseUpdatePath_Click);
+            // 
+            // btnTestUpdatePath
+            // 
+            this.btnTestUpdatePath.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTestUpdatePath.Appearance.Options.UseFont = true;
+            this.btnTestUpdatePath.Location = new System.Drawing.Point(657, 368);
+            this.btnTestUpdatePath.Name = "btnTestUpdatePath";
+            this.btnTestUpdatePath.Size = new System.Drawing.Size(95, 28);
+            this.btnTestUpdatePath.TabIndex = 158;
+            this.btnTestUpdatePath.Text = "Test Check";
+            this.btnTestUpdatePath.Click += new System.EventHandler(this.btnTestUpdatePath_Click);
+            // 
+            // lblServerUser
+            // 
+            this.lblServerUser.AutoSize = true;
+            this.lblServerUser.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblServerUser.Location = new System.Drawing.Point(16, 410);
+            this.lblServerUser.Name = "lblServerUser";
+            this.lblServerUser.Size = new System.Drawing.Size(78, 13);
+            this.lblServerUser.TabIndex = 159;
+            this.lblServerUser.Text = "Server User:";
+            // 
+            // txtServerUser
+            // 
+            this.txtServerUser.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtServerUser.Location = new System.Drawing.Point(132, 406);
+            this.txtServerUser.Name = "txtServerUser";
+            this.txtServerUser.Size = new System.Drawing.Size(160, 22);
+            this.txtServerUser.TabIndex = 160;
+            // 
+            // lblServerPass
+            // 
+            this.lblServerPass.AutoSize = true;
+            this.lblServerPass.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblServerPass.Location = new System.Drawing.Point(315, 410);
+            this.lblServerPass.Name = "lblServerPass";
+            this.lblServerPass.Size = new System.Drawing.Size(78, 13);
+            this.lblServerPass.TabIndex = 161;
+            this.lblServerPass.Text = "Server Pass:";
+            // 
+            // txtServerPass
+            // 
+            this.txtServerPass.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtServerPass.Location = new System.Drawing.Point(402, 406);
+            this.txtServerPass.Name = "txtServerPass";
+            this.txtServerPass.PasswordChar = '*';
+            this.txtServerPass.Size = new System.Drawing.Size(160, 22);
+            this.txtServerPass.TabIndex = 162;
+            // 
+            // btnOpenServerFolder
+            // 
+            this.btnOpenServerFolder.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenServerFolder.Appearance.Options.UseFont = true;
+            this.btnOpenServerFolder.Location = new System.Drawing.Point(572, 403);
+            this.btnOpenServerFolder.Name = "btnOpenServerFolder";
+            this.btnOpenServerFolder.Size = new System.Drawing.Size(180, 28);
+            this.btnOpenServerFolder.TabIndex = 163;
+            this.btnOpenServerFolder.Text = "Mở Folder (Remember)";
+            this.btnOpenServerFolder.Click += new System.EventHandler(this.btnOpenServerFolder_Click);
+            // 
             // FrmConfig2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 530);
             this.Controls.Add(this.btnChangePassword);
+            this.Controls.Add(this.chkAutoCheckUpdate);
+            this.Controls.Add(this.lblUpdatePath);
+            this.Controls.Add(this.txtServerUpdatePath);
+            this.Controls.Add(this.btnBrowseUpdatePath);
+            this.Controls.Add(this.btnTestUpdatePath);
+            this.Controls.Add(this.lblServerUser);
+            this.Controls.Add(this.txtServerUser);
+            this.Controls.Add(this.lblServerPass);
+            this.Controls.Add(this.txtServerPass);
+            this.Controls.Add(this.btnOpenServerFolder);
             this.Controls.Add(this.cbbBCRSelect);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtNumBlock);
@@ -468,6 +588,16 @@ namespace DXApplication1
         private System.Windows.Forms.ComboBox cbbBCRSelect;
         private System.Windows.Forms.Label label8;
         private DevExpress.XtraEditors.SimpleButton btnChangePassword;
+        private System.Windows.Forms.CheckBox chkAutoCheckUpdate;
+        private System.Windows.Forms.Label lblUpdatePath;
+        private System.Windows.Forms.TextBox txtServerUpdatePath;
+        private DevExpress.XtraEditors.SimpleButton btnBrowseUpdatePath;
+        private DevExpress.XtraEditors.SimpleButton btnTestUpdatePath;
+        private System.Windows.Forms.Label lblServerUser;
+        private System.Windows.Forms.TextBox txtServerUser;
+        private System.Windows.Forms.Label lblServerPass;
+        private System.Windows.Forms.TextBox txtServerPass;
+        private DevExpress.XtraEditors.SimpleButton btnOpenServerFolder;
     }
 }
 

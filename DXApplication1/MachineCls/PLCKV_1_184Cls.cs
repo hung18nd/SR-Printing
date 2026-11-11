@@ -21,11 +21,25 @@ namespace DXApplication1.MachineCls
             if (!VarGlobal.McSMPrinting.EnablePlcKV) return;
             mainThreadStart = true;
             ThreadPollingPLCKV = new Thread(() => ThreadPollingPLCKV_Process(conn));
+            ThreadPollingPLCKV.IsBackground = true;
             ThreadPollingPLCKV.Start();
         }
         public static void Thread_Release()
         {
             mainThreadStart = false;
+            try
+            {
+                if (PLCKV != null && PLCKV.Client != null) PLCKV.Close();
+            }
+            catch { }
+            try
+            {
+                if (ThreadPollingPLCKV != null && ThreadPollingPLCKV.IsAlive)
+                {
+                    ThreadPollingPLCKV.Abort();
+                }
+            }
+            catch { }
         }
 
         #region PLCKV PROCESS

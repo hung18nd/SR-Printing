@@ -127,7 +127,8 @@
       <DependentUpon>FrmBlockIdConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\Conversion.cs" />
-    <Compile Include="Common\Global.cs" />
+    <Compile Include="Common\Global.cs" />
+    <Compile Include="Common\AutoUpdateManager.cs" />
     <Compile Include="Common\IniFile.cs" />
     <Compile Include="Common\SQLFunc.cs" />
     <Compile Include="Common\SQLiteHelper.cs" />

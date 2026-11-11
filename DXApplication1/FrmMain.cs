@@ -116,8 +116,11 @@ namespace DXApplication1
             TimerUpdateViewInit();
 
             txtSRPrintingMcID.Text = VarGlobal.McID;
-            //this.WindowState = FormWindowState.Maximized;
+            this.WindowState = FormWindowState.Maximized;
             ReInitialNew();
+            InitAutoLayoutResponsive();
+            LoadLanguageConfig();
+            OperatorID.Visible = false;
             cbbBCRSelect.SelectedIndex = VarGlobal.McSMPrinting.BcrSelect;
 
             string file = Global.ApplicationPath() + @"\" + "App.app";
@@ -127,23 +130,24 @@ namespace DXApplication1
             {
                 Global.PassworSetting = tmp;
             }
-            // Dong bo trang thai EnablePlcKV tu BlockIdConfig
             var blockIdCfg = BlockId.BlockIdConfig.Instance;
             VarGlobal.McSMPrinting.EnablePlcKV = blockIdCfg.EnablePlcKV;
 
-            // Khoi dong BlockId Ingestion Worker
-            BlockId.BlockIdQueueManager.StartWorker();
-            BlockId.BlockIdQueueManager.OnBlockIdAlert += (alertMsg, alertSev) =>
-            {
-                try
-                {
-                    this.BeginInvoke(new Action(() =>
-                    {
-                        MessageBox.Show(alertMsg, "BlockId API Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }));
-                }
-                catch { }
-            };
+            // Kiem tra phien ban moi tren Server khi bat phan mem len
+           // AutoUpdateManager.CheckUpdateOnStartup(this);
+
+          
+            //BlockId.BlockIdQueueManager.OnBlockIdAlert += (alertMsg, alertSev) =>
+            //{
+            //try
+            //{
+            //this.BeginInvoke(new Action(() =>
+            //{
+            //MessageBox.Show(alertMsg, "BlockId API Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}));
+            //}
+            //catch { }
+            //};
         }
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -151,10 +155,17 @@ namespace DXApplication1
             if (password == "1")
             {
                 Timer1sRelease();
-                TimerrUpdateViewRelease();               
+                TimerrUpdateViewRelease();
+
                 KillAllThreadsNew();
                 BlockId.BlockIdQueueManager.StopWorker();
                 isCloseForm = true;
+
+                VarGlobal.StopAllThreadPollingPLC();
+
+                AutoUpdateManager.CheckAndUpdateOnClose();
+
+                Environment.Exit(0);
             }
             else
             {
@@ -172,11 +183,139 @@ namespace DXApplication1
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            using (var frm = new BlockId.FrmBlockIdConfig())
+            string pass = Global.PasswordInput();
+            if (string.IsNullOrEmpty(pass)) return;
+
+            if (pass == Global.PassworSetting || pass == "seev@123" || pass == "1")
             {
-                frm.ShowDialog();
+                using (var frm = new BlockId.FrmBlockIdConfig())
+                {
+                    frm.ShowDialog();
+                }
+            }
+            else
+            {
+                MessageBox.Show(CurrentLanguage == "VI" ? "Sai mật khẩu!" : "Wrong password!", 
+                                CurrentLanguage == "VI" ? "LỖI THAO TÁC" : "ERROR", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #region MULTI-LANGUAGE
+        public static string CurrentLanguage = "EN"; // "EN" hoac "VI"
+
+        private void LoadLanguageConfig()
+        {
+            try
+            {
+                string iniPath = Global.ApplicationPath() + @"\AppConfig" + $@"\{VarGlobal.McID}.ini";
+                IniFile ini = new IniFile(iniPath);
+                string lang = ini.IniReadValue("PARAM", "Language");
+                if (string.IsNullOrEmpty(lang))
+                {
+                    lang = "EN";
+                    ini.IniWriteValue("PARAM", "Language", lang);
+                }
+                CurrentLanguage = lang.ToUpper();
+                ApplyLanguage(CurrentLanguage);
+            }
+            catch { }
+        }
+
+        private void SaveLanguageConfig(string lang)
+        {
+            try
+            {
+                string iniPath = Global.ApplicationPath() + @"\AppConfig" + $@"\{VarGlobal.McID}.ini";
+                IniFile ini = new IniFile(iniPath);
+                ini.IniWriteValue("PARAM", "Language", lang);
+            }
+            catch { }
+        }
+
+        private void btnLanguage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            // Toggle language EN <-> VI
+            CurrentLanguage = (CurrentLanguage == "VI") ? "EN" : "VI";
+            SaveLanguageConfig(CurrentLanguage);
+            ApplyLanguage(CurrentLanguage);
+        }
+
+        private void ApplyLanguage(string lang)
+        {
+            bool isVi = (lang == "VI");
+
+            // Update button switch caption
+            btnLanguage.Caption = isVi ? "ENGLISH" : "TIẾNG VIỆT";
+
+            // Main menu
+            barButtonItem1.Caption = isVi ? "Cài đặt" : "Setting";
+            barSubItem2.Caption = isVi ? "Công cụ" : "Tools";
+
+            // Tab Pages
+            tabPage1.Text = isVi ? "THAO TÁC" : "MAIN";
+            tabPage2.Text = isVi ? "GIÁM SÁT" : "MONITOR";
+
+            // Data Group
+            groupControl1.Text = isVi ? "DỮ LIỆU" : "DATA";
+            label1.Text = isVi ? "Mã máy in" : "SR Printing ID";
+            label2.Text = isVi ? "Mã xe (Trolley)" : "Troley ID";
+            label14.Text = isVi ? "CHẾ ĐỘ BCR" : "BCR MODE";
+            label12.Text = isVi ? "FPC / Lần in" : "FPC / Lần in";
+            label13.Text = isVi ? "Số lượng (Counter)" : "Counter";
+            label4.Text = isVi ? "Mã công nhân" : "OperatorID";
+
+            btnReset.Text = isVi ? "RESET TẤT CẢ" : "RESET ALL";
+            btnStart.Text = isVi ? "BẮT ĐẦU" : "START";
+            btnStop.Text = isVi ? "DỪNG" : "STOP";
+            btnTest.Text = isVi ? "XÓA FPC ID" : "RESET CURR BLOCK";
+            btnPassRead.Text = "PASS";
+            lblPassRead.Text = "PASS";
+
+            // DataGridView Headers
+            IND.HeaderText = "#";
+            DateTimeLog.HeaderText = isVi ? "THỜI GIAN" : "DATE TIME";
+            MachineID.HeaderText = isVi ? "MÃ MÁY IN" : "PRINTING MACHINE ID";
+            TroleyID.HeaderText = isVi ? "MÃ XE (TROLLEY)" : "TROLEY ID";
+            BlockID.HeaderText = isVi ? "MÃ BLOCK" : "BLOCK ID";
+         //   OperatorID.HeaderText = isVi ? "MÃ CÔNG NHÂN" : "OPERATOR ID";
+
+            // Status Panel (Tab Monitor)
+            groupControl3.Text = isVi ? "TRẠNG THÁI" : "STATUS";
+            label40.Text = "PLC";
+            label25.Text = "SRX300W";
+            label27.Text = "COGNEX";
+            label32.Text = "PLC KV";
+            label35.Text = isVi ? "CƠ SỞ DỮ LIỆU" : "DATA BASE";
+            label30.Text = isVi ? "Mã Item" : "Item Code";
+            label29.Text = isVi ? "Tên Item" : "Item Name";
+            label28.Text = isVi ? "Lot" : "Lot";
+            label26.Text = isVi ? "Sequence" : "Sequence";
+
+            // Parameter Group (Tab Monitor)
+            groupControl2.Text = isVi ? "THÔNG SỐ" : "PARAMETER";
+            label18.Text = isVi ? "Thời gian in (sec)" : "Printing Time (sec)";
+            label17.Text = isVi ? "Góc Stencil (mm)" : "Stencil Angle (mm)";
+            label16.Text = isVi ? "Tốc độ gạt (mm/sec)" : "Squeeze Speed (mm/sec)";
+            label15.Text = isVi ? "Tốc độ hồi (mm/sec)" : "Return Speed (mm/sec)";
+            label19.Text = isVi ? "Áp suất dao in (kgf)" : "Squeeze Pressure (kgf)";
+            label20.Text = isVi ? "Áp suất dao gạt (kgf)" : "Coater Pressure (kgf)";
+            label21.Text = isVi ? "Quãng đường dao gạt đầu (mm)" : "Squeeze Pringting\r\nDistance Start (mm)";
+            label22.Text = isVi ? "Quãng đường dao gạt cuối (mm)" : "Squeeze Pringting\r\nDistance Finish (mm)";
+            label23.Text = isVi ? "Khoảng cách khung in đến bàn in (mm)" : "Gap (mm)";
+            label24.Text = isVi ? "Áp suất khí đầu vào (kgf)" : "MachineAirPressure (kgf)";
+
+            // Status Bar
+            barStaticItem1.Caption = isVi ? "Thời gian:" : "Date Time:";
+            barStaticItem2.Caption = isVi ? "Luồng:" : "Thread:";
+            barStaticItem4.Caption = isVi ? "Sử dụng CPU:" : "CPUUsage:";
+            barStaticItem6.Caption = isVi ? "Bộ nhớ RAM:" : "RAM:";
+            barStaticItem5.Caption = isVi ? "Trạng thái PLC:" : "PLC Status:";
+
+            // Window title
+            this.Text = $"SR Printing Data Loging Software - Version: {Global.VersionSoftware} [{(isVi ? "TIẾNG VIỆT" : "ENGLISH")}]";
+        }
+        #endregion
 
         #region TIMER
         private void Timer1sInit()
@@ -403,7 +542,7 @@ namespace DXApplication1
             txtParm_SquePrinDistFinish.Text = VarGlobal.McSMPrintingParam.SqueezePringtingDistanceFinish.ToString();
             txtParm_CoaterPress.Text = VarGlobal.McSMPrintingParam.CoaterPressure.ToString();
             txtParm_Gap.Text = VarGlobal.McSMPrintingParam.Gap.ToString();
-            txtParm_McAirPress.Text = VarGlobal.McSMPrintingParam.MachineAirPressure.ToString();
+            txtParm_McAirPress.Text = (VarGlobal.McSMPrintingParam.MachineAirPressure/1000).ToString();
 
             if (LastTimeBtnPassPressed.AddSeconds(2) < DateTime.Now && IsBtnPassReadPressed && VarGlobal.McSMPrinting.IsSwStart && VarGlobal.McSMPrinting.IsMcReadyStart)
             {
@@ -545,27 +684,27 @@ namespace DXApplication1
 
             cmdThreadStart = true;
             threadScanLog = new Thread(() => ThreadScanLogProcess());
+            threadScanLog.IsBackground = true;
             threadScanLog.Start();
         }
         private void KillAllThreadsNew()
         {
             cmdThreadStart = false;
-
+            try
+            {
+                if (threadScanLog != null && threadScanLog.IsAlive)
+                {
+                    threadScanLog.Abort();
+                }
+            }
+            catch { }
         }
 
         private void ThreadScanLogProcess()
         {
             while (cmdThreadStart)
             {
-                if (!SQLFunc.IsConnected)
-                {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Thread.Sleep(1000);
-                        if (!cmdThreadStart) break;
-                    }
-                    continue;
-                }
+                
 
                 string path = Global.ApplicationPath() + @"\HistoryData";
                 if (Directory.Exists(path))
@@ -609,7 +748,7 @@ namespace DXApplication1
                                     else
                                     {
                                         SQLFunc.IsConnected = false;
-                                        VarGlobal.IsConnectedDB = false;
+                                    //    VarGlobal.IsConnectedDB = false;
                                         break;
                                     }
                                 }
@@ -1166,6 +1305,236 @@ namespace DXApplication1
         
         #endregion
 
+        #region RESPONSIVE AUTO-LAYOUT
+        private void InitAutoLayoutResponsive()
+        {
+            this.Resize += FrmMain_Resize;
+            tabPage1.Resize += (s, e) => AdjustMainTabLayout();
+            tabPage2.Resize += (s, e) => AdjustMonitorTabLayout();
+            this.Shown += (s, e) =>
+            {
+                this.WindowState = FormWindowState.Maximized;
+                this.BeginInvoke(new Action(() =>
+                {
+                    AdjustMainTabLayout();
+                    AdjustMonitorTabLayout();
+                }));
+            };
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this.WindowState = FormWindowState.Maximized;
+            this.BeginInvoke(new Action(() =>
+            {
+                AdjustMainTabLayout();
+                AdjustMonitorTabLayout();
+            }));
+        }
+
+        private void FrmMain_Resize(object sender, EventArgs e)
+        {
+            AdjustMainTabLayout();
+            AdjustMonitorTabLayout();
+        }
+
+        private void AdjustMainTabLayout()
+        {
+            if (groupControl1 == null || groupControl1.Width <= 100) return;
+
+            int totalW = groupControl1.ClientSize.Width;
+            if (totalW < 900) return;
+
+            int rightEdge = totalW - 25;
+            int rightBtnW = 150;
+            int rightColX = rightEdge - rightBtnW;
+
+            btnStart.Left = rightColX;
+            btnStart.Width = rightBtnW;
+            btnStop.Left = rightColX;
+            btnStop.Width = rightBtnW;
+            btnTest.Left = rightColX;
+            btnTest.Width = rightBtnW;
+            btnPassRead.Left = rightColX;
+            btnPassRead.Width = rightBtnW;
+
+            txtBlockNumPerCycle.Left = rightColX;
+            txtBlockNumPerCycle.Width = rightBtnW;
+            label12.Left = rightColX - label12.Width - 15;
+
+            txtCounter.Left = rightColX;
+            txtCounter.Width = rightBtnW;
+            label13.Left = rightColX - label13.Width - 15;
+
+            int startX = 30;
+            int endX = Math.Min(label12.Left, label13.Left) - 30;
+            int availW = endX - startX;
+
+            if (availW > 500)
+            {
+                int halfW = availW / 2;
+                int col1StartX = startX;
+                int col2StartX = startX + halfW + 20;
+
+                int labelW = 95; 
+                int colBoxW = Math.Max(190, halfW - labelW - 40);
+
+                label1.Left = col1StartX;
+                txtSRPrintingMcID.Left = col1StartX + labelW;
+                txtSRPrintingMcID.Width = colBoxW;
+
+                label2.Left = col1StartX;
+                txtTroleyID.Left = col1StartX + labelW;
+                txtTroleyID.Width = Math.Max(120, colBoxW - 120);
+                btnReset.Left = txtTroleyID.Right + 10;
+
+                lblSignalStart.Left = col1StartX - 25;
+                label3.Left = col1StartX;
+                txtBlockID.Left = col1StartX + labelW;
+                txtBlockID.Width = colBoxW;
+
+                label5.Left = col1StartX;
+                txtBlockID3.Left = col1StartX + labelW;
+                txtBlockID3.Width = colBoxW;
+
+                label6.Left = col1StartX;
+                txtBlockID5.Left = col1StartX + labelW;
+                txtBlockID5.Width = colBoxW;
+
+                label7.Left = col1StartX;
+                txtBlockID7.Left = col1StartX + labelW;
+                txtBlockID7.Width = colBoxW;
+
+                label14.Left = col2StartX;
+                txtBcrMode.Left = col2StartX + labelW;
+                int bcrModeW = Math.Max(150, colBoxW - 110);
+                txtBcrMode.Width = bcrModeW;
+                cbbBCRSelect.Left = txtBcrMode.Right + 10;
+
+                label8.Left = col2StartX;
+                txtBlockID2.Left = col2StartX + labelW;
+                txtBlockID2.Width = colBoxW;
+
+                label9.Left = col2StartX;
+                txtBlockID4.Left = col2StartX + labelW;
+                txtBlockID4.Width = colBoxW;
+
+                label10.Left = col2StartX;
+                txtBlockID6.Left = col2StartX + labelW;
+                txtBlockID6.Width = colBoxW;
+
+                label11.Left = col2StartX;
+                txtBlockID8.Left = col2StartX + labelW;
+                txtBlockID8.Width = colBoxW;
+            }
+        }
+
+        private void AdjustMonitorTabLayout()
+        {
+            if (groupControl2 == null || groupControl2.Width <= 100) return;
+
+            int totalW = groupControl2.ClientSize.Width;
+            if (totalW < 900) return;
+
+            int halfW = (totalW - 60) / 2;
+            int col1StartX = 25;
+            int col2StartX = 25 + halfW + 20;
+
+            int labelW1 = 145;
+            int boxW1 = Math.Max(212, halfW - labelW1 - 30);
+
+            label18.Left = col1StartX;
+            txtParm_PrintingTime.Left = col1StartX + labelW1;
+            txtParm_PrintingTime.Width = boxW1;
+
+            label17.Left = col1StartX;
+            txtParm_StencilAngle.Left = col1StartX + labelW1;
+            txtParm_StencilAngle.Width = boxW1;
+
+            label16.Left = col1StartX;
+            txtParm_SquSpeed.Left = col1StartX + labelW1;
+            txtParm_SquSpeed.Width = boxW1;
+
+            label15.Left = col1StartX;
+            txtParm_ReturnSpeed.Left = col1StartX + labelW1;
+            txtParm_ReturnSpeed.Width = boxW1;
+
+            label19.Left = col1StartX;
+            txtParm_SquePress.Left = col1StartX + labelW1;
+            txtParm_SquePress.Width = boxW1;
+
+            int labelW2 = 180;
+            int boxW2 = Math.Max(212, halfW - labelW2 - 30);
+
+            label21.Left = col2StartX;
+            txtParm_SquePrinDistStart.Left = col2StartX + labelW2;
+            txtParm_SquePrinDistStart.Width = boxW2;
+
+            label22.Left = col2StartX;
+            txtParm_SquePrinDistFinish.Left = col2StartX + labelW2;
+            txtParm_SquePrinDistFinish.Width = boxW2;
+
+            label20.Left = col2StartX;
+            txtParm_CoaterPress.Left = col2StartX + labelW2;
+            txtParm_CoaterPress.Width = boxW2;
+
+            label23.Left = col2StartX;
+            txtParm_Gap.Left = col2StartX + labelW2;
+            txtParm_Gap.Width = boxW2;
+
+            label24.Left = col2StartX;
+            txtParm_McAirPress.Left = col2StartX + labelW2;
+            txtParm_McAirPress.Width = boxW2;
+
+            if (groupControl3 != null)
+            {
+                label40.Left = col1StartX;
+                txtPLCStatMonitor.Left = col1StartX + labelW1;
+                txtPLCStatMonitor.Width = boxW1;
+
+                label25.Left = col1StartX;
+                txtSRXStatMonitor.Left = col1StartX + labelW1;
+                txtSRXStatMonitor.Width = boxW1;
+
+                label27.Left = col1StartX;
+                txtCOGStatMonitor.Left = col1StartX + labelW1;
+                txtCOGStatMonitor.Width = boxW1;
+
+                label32.Left = col1StartX;
+                txtKVStatMonitor.Left = col1StartX + labelW1;
+                txtKVStatMonitor.Width = boxW1;
+
+                label35.Left = col1StartX;
+                txtDBStatMonitor.Left = col1StartX + labelW1;
+                txtDBStatMonitor.Width = boxW1;
+
+                int labelW3 = 130;
+                int boxW3 = Math.Max(212, halfW - labelW3 - 50);
+
+                label29.Left = col2StartX;
+                label31.Left = col2StartX + 75;
+                txtItemNamePlusA.Left = col2StartX + labelW3;
+                txtItemNamePlusA.Width = boxW3;
+
+                label30.Left = col2StartX;
+                label33.Left = col2StartX + 75;
+                txtItemCodePlusA.Left = col2StartX + labelW3;
+                txtItemCodePlusA.Width = boxW3;
+
+                label28.Left = col2StartX;
+                label34.Left = col2StartX + 75;
+                txtItemLotPlusA.Left = col2StartX + labelW3;
+                txtItemLotPlusA.Width = boxW3;
+
+                label26.Left = col2StartX;
+                label36.Left = col2StartX + 75;
+                txtItemSeqPlusA.Left = col2StartX + labelW3;
+                txtItemSeqPlusA.Width = boxW3;
+            }
+        }
+        #endregion
+
 
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1369,6 +1738,11 @@ namespace DXApplication1
         }
 
         private void lblPassRead_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgrConn_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

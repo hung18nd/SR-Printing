@@ -71,8 +71,8 @@ namespace DXApplication1
             ////string reeee = Read_DReg_Binary3E("D700",1);
             mainThreadStart = true;
             
-            if (Factory == "F1")
-            {
+            //if (Factory == "F1")
+            //{
                 
                 #region machine
 
@@ -84,14 +84,14 @@ namespace DXApplication1
                 #endregion
 
                 Thread.Sleep(100);
-                if (VarGlobal.McSMPrinting.EnablePlcKV)
-                {
-                    ConnCfg conn = new ConnCfg() { Enable = true, MachineType = "PLCKV8000", MachineID = "PLCKV8000", PlcIp = VarGlobal.McSMPrinting.PlcIpKV, PlcPort = VarGlobal.McSMPrinting.PlcPortKV, Factory = "F1", MachineName = "PLC KV" };
-                    ListConn.Add(conn);
-                    PLCKV_1_184Cls.Thread_Init(conn);
-                }
-                #endregion
+            if (VarGlobal.McSMPrinting.EnablePlcKV)
+            {
+                ConnCfg conn = new ConnCfg() { Enable = true, MachineType = "PLCKV8000", MachineID = "PLCKV8000", PlcIp = VarGlobal.McSMPrinting.PlcIpKV, PlcPort = VarGlobal.McSMPrinting.PlcPortKV, Factory = "F1", MachineName = "PLC KV" };
+                ListConn.Add(conn);
+                PLCKV_1_184Cls.Thread_Init(conn);
             }
+            #endregion
+            // }
         }
 
         public static void StopAllThreadPollingPLC()

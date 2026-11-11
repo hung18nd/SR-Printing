@@ -24,7 +24,7 @@ namespace DXApplication1.BlockId
         [JsonProperty("subject")]
         public string Subject { get; set; }
 
-        [JsonProperty("time")]
+        [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
         public string Time { get; set; }
 
         [JsonProperty("data")]

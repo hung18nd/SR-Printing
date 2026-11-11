@@ -176,57 +176,47 @@ static class Global
             {
                 DateTime now = DateTime.Now;
 
-                // 1. Giới hạn tần suất tổng thể: không ghi quá 10 log/giây trên toàn bộ ứng dụng
-                while (_globalLogTimestamps.Count > 0 && (now - _globalLogTimestamps.Peek()).TotalSeconds >= 1)
+            
+                if (!Directory.Exists(MyPath)) Directory.CreateDirectory(MyPath);
+                string logFile = MyPath + now.ToString("yyyyMMdd_HH") + "[" + Process.GetCurrentProcess().ProcessName + "].log";
+                string appendText = now.ToString("[yyyy-MM-dd HH:mm:ss.fff] - ") + stext + "\r\n";
+
+                if (File.Exists(logFile) == false)
                 {
-                    _globalLogTimestamps.Dequeue();
-                }
-                if (_globalLogTimestamps.Count >= 10)
-                {
-                    return; // Vượt quá giới hạn ghi log/giây, bỏ qua để tránh tràn RAM/I/O
+                    string createText = "Đây là LOG file event \r\n";
+                    File.WriteAllText(logFile, createText);
                 }
 
-                // 2. Tạo khóa nhận diện cho thông điệp (dòng đầu tiên hoặc 80 ký tự đầu)
-                // Giúp phân biệt từng hàm/lỗi riêng biệt ngay cả khi các hàm khác nhau gọi ghi log xen kẽ
-                string logKey = stext.Trim();
-                int newlineIdx = logKey.IndexOfAny(new char[] { '\r', '\n' });
-                if (newlineIdx > 0)
+                FileInfo fi = new FileInfo(logFile);
+                if (fi.Exists && fi.Length > 20 * 1024 * 1024)
                 {
-                    logKey = logKey.Substring(0, newlineIdx).Trim();
-                }
-                if (logKey.Length > 80)
-                {
-                    logKey = logKey.Substring(0, 80);
+                    return;
                 }
 
-                // 3. Kiểm tra xem lỗi từ hàm/thông điệp này có vừa được ghi trong vòng 30 giây không
-                if (_recentLogMap.TryGetValue(logKey, out DateTime lastLoggedTime))
-                {
-                    if ((now - lastLoggedTime).TotalSeconds < 30)
-                    {
-                        return; // Đã ghi thông điệp tương tự trong 30s, bỏ qua
-                    }
-                }
+                File.AppendAllText(logFile, appendText);
+                _globalLogTimestamps.Enqueue(now);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
+    }
+    static public void WriteLogFileSQL(string stext)
+    {
+        if (string.IsNullOrEmpty(stext)) return;
 
-                // Cập nhật thời điểm ghi của khóa này
-                _recentLogMap[logKey] = now;
 
-                // Dọn dẹp bộ nhớ định kỳ cho _recentLogMap để tránh rò rỉ RAM
-                if (_recentLogMap.Count > 100)
-                {
-                    List<string> expiredKeys = new List<string>();
-                    foreach (var pair in _recentLogMap)
-                    {
-                        if ((now - pair.Value).TotalMinutes > 2)
-                        {
-                            expiredKeys.Add(pair.Key);
-                        }
-                    }
-                    foreach (var k in expiredKeys)
-                    {
-                        _recentLogMap.Remove(k);
-                    }
-                }
+        lock (_logLock)
+        {
+            string MyPath = ApplicationPath() + @"\EventsLog\";
+            string lastMsg = string.Empty;
+            if (lastMsg == stext) return;
+            try
+            {
+                DateTime now = DateTime.Now;
+               
+                
 
                 if (!Directory.Exists(MyPath)) Directory.CreateDirectory(MyPath);
                 string logFile = MyPath + now.ToString("yyyyMMdd_HH") + "[" + Process.GetCurrentProcess().ProcessName + "].log";
@@ -238,7 +228,6 @@ static class Global
                     File.WriteAllText(logFile, createText);
                 }
 
-                // Giới hạn kích thước file log tối đa 20MB để bảo vệ ổ cứng
                 FileInfo fi = new FileInfo(logFile);
                 if (fi.Exists && fi.Length > 20 * 1024 * 1024)
                 {
@@ -246,7 +235,7 @@ static class Global
                 }
 
                 File.AppendAllText(logFile, appendText);
-                _globalLogTimestamps.Enqueue(now);
+                    lastMsg = stext;
             }
             catch (Exception ex)
             {

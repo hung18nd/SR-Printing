@@ -21,11 +21,25 @@ namespace DXApplication1.MachineCls.SM_Printing
         {
             mainThreadStart = true;
             ThreadPolling = new Thread(() => ThreadPolling_Process());
+            ThreadPolling.IsBackground = true;
             ThreadPolling.Start();
         }
         public static void Thread_Release()
         {
             mainThreadStart = false;
+            try
+            {
+                if (m_reader != null) m_reader.Disconnect();
+            }
+            catch { }
+            try
+            {
+                if (ThreadPolling != null && ThreadPolling.IsAlive)
+                {
+                    ThreadPolling.Abort();
+                }
+            }
+            catch { }
         }
 
         private static string lst_blockid = "";

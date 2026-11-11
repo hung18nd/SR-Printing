@@ -59,7 +59,8 @@ namespace DXApplication1
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.btnMachineCfg = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
+            this.btnLanguage = new DevExpress.XtraBars.BarButtonItem();
             this.bar9 = new DevExpress.XtraBars.Bar();
             this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
             this.bsiDatetime = new DevExpress.XtraBars.BarStaticItem();
@@ -76,7 +77,7 @@ namespace DXApplication1
             this.barDockControl8 = new DevExpress.XtraBars.BarDockControl();
             this.barDockControl9 = new DevExpress.XtraBars.BarDockControl();
             this.barDockControl10 = new DevExpress.XtraBars.BarDockControl();
-            this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.lblSignalStart = new System.Windows.Forms.Label();
             this.cbbBCRSelect = new System.Windows.Forms.ComboBox();
@@ -116,12 +117,6 @@ namespace DXApplication1
             this.txtSRPrintingMcID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dgrConn = new System.Windows.Forms.DataGridView();
-            this.IND = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateTimeLog = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MachineID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TroleyID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BlockID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OperatorID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -169,6 +164,12 @@ namespace DXApplication1
             this.txtParm_SquSpeed = new System.Windows.Forms.TextBox();
             this.txtParm_StencilAngle = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.IND = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateTimeLog = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MachineID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TroleyID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BlockID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperatorID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
@@ -357,12 +358,13 @@ namespace DXApplication1
             this.btnMachineCfg,
             this.barButtonItem1,
             this.barButtonItem2,
+            this.btnLanguage,
             this.barSubItem2,
             this.bsiPLCStatus,
             this.barStaticItem5,
             this.bsiPlcIP});
             this.barManager1.MainMenu = this.bar8;
-            this.barManager1.MaxItemId = 23;
+            this.barManager1.MaxItemId = 25;
             this.barManager1.StatusBar = this.bar9;
             // 
             // bar8
@@ -375,7 +377,7 @@ namespace DXApplication1
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem2),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnLanguage)});
             this.bar8.OptionsBar.MultiLine = true;
             this.bar8.OptionsBar.UseWholeRow = true;
             this.bar8.Text = "Main menu";
@@ -405,11 +407,19 @@ namespace DXApplication1
             this.barButtonItem1.Name = "barButtonItem1";
             this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
             // 
-            // barSubItem2
+            // barButtonItem2
             // 
-            this.barSubItem2.Caption = "Tools";
-            this.barSubItem2.Id = 12;
-            this.barSubItem2.Name = "barSubItem2";
+            this.barButtonItem2.Caption = "BlockId API";
+            this.barButtonItem2.Id = 11;
+            this.barButtonItem2.Name = "barButtonItem2";
+            this.barButtonItem2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
+            // 
+            // btnLanguage
+            // 
+            this.btnLanguage.Caption = "VIETNAMESE";
+            this.btnLanguage.Id = 24;
+            this.btnLanguage.Name = "btnLanguage";
+            this.btnLanguage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLanguage_ItemClick);
             // 
             // bar9
             // 
@@ -552,12 +562,11 @@ namespace DXApplication1
             this.barDockControl10.Manager = this.barManager1;
             this.barDockControl10.Size = new System.Drawing.Size(0, 664);
             // 
-            // barButtonItem2
+            // barSubItem2
             // 
-            this.barButtonItem2.Caption = "BlockId API";
-            this.barButtonItem2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
-            this.barButtonItem2.Id = 11;
-            this.barButtonItem2.Name = "barButtonItem2";
+            this.barSubItem2.Caption = "Tools";
+            this.barSubItem2.Id = 12;
+            this.barSubItem2.Name = "barSubItem2";
             // 
             // groupControl1
             // 
@@ -634,6 +643,7 @@ namespace DXApplication1
             // 
             // btnPassRead
             // 
+            this.btnPassRead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPassRead.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPassRead.Location = new System.Drawing.Point(831, 190);
             this.btnPassRead.Name = "btnPassRead";
@@ -658,6 +668,7 @@ namespace DXApplication1
             // 
             // btnTest
             // 
+            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTest.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTest.Location = new System.Drawing.Point(832, 93);
             this.btnTest.Name = "btnTest";
@@ -669,6 +680,7 @@ namespace DXApplication1
             // 
             // btnStop
             // 
+            this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStop.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStop.Location = new System.Drawing.Point(831, 62);
             this.btnStop.Name = "btnStop";
@@ -680,6 +692,7 @@ namespace DXApplication1
             // 
             // btnStart
             // 
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.Location = new System.Drawing.Point(831, 31);
             this.btnStart.Name = "btnStart";
@@ -724,6 +737,7 @@ namespace DXApplication1
             // 
             // txtCounter
             // 
+            this.txtCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCounter.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCounter.Location = new System.Drawing.Point(831, 160);
             this.txtCounter.Name = "txtCounter";
@@ -734,9 +748,10 @@ namespace DXApplication1
             // 
             // label13
             // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(724, 163);
+            this.label13.Location = new System.Drawing.Point(711, 163);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(51, 14);
             this.label13.TabIndex = 113;
@@ -744,6 +759,7 @@ namespace DXApplication1
             // 
             // txtBlockNumPerCycle
             // 
+            this.txtBlockNumPerCycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtBlockNumPerCycle.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBlockNumPerCycle.Location = new System.Drawing.Point(831, 128);
             this.txtBlockNumPerCycle.Name = "txtBlockNumPerCycle";
@@ -754,9 +770,10 @@ namespace DXApplication1
             // 
             // label12
             // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(724, 131);
+            this.label12.Location = new System.Drawing.Point(711, 131);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(72, 14);
             this.label12.TabIndex = 111;
@@ -1037,65 +1054,7 @@ namespace DXApplication1
             this.dgrConn.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgrConn.Size = new System.Drawing.Size(984, 372);
             this.dgrConn.TabIndex = 96;
-            // 
-            // IND
-            // 
-            this.IND.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.IND.DefaultCellStyle = dataGridViewCellStyle2;
-            this.IND.HeaderText = "#";
-            this.IND.Name = "IND";
-            this.IND.ReadOnly = true;
-            this.IND.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.IND.Width = 50;
-            // 
-            // DateTimeLog
-            // 
-            this.DateTimeLog.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DateTimeLog.HeaderText = "DATE TIME";
-            this.DateTimeLog.Name = "DateTimeLog";
-            this.DateTimeLog.ReadOnly = true;
-            this.DateTimeLog.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // MachineID
-            // 
-            this.MachineID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MachineID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.MachineID.HeaderText = "PRINTING MACHINE ID";
-            this.MachineID.Name = "MachineID";
-            this.MachineID.ReadOnly = true;
-            this.MachineID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // TroleyID
-            // 
-            this.TroleyID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.TroleyID.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TroleyID.HeaderText = "TROLEY ID";
-            this.TroleyID.Name = "TroleyID";
-            this.TroleyID.ReadOnly = true;
-            this.TroleyID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // BlockID
-            // 
-            this.BlockID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.BlockID.DefaultCellStyle = dataGridViewCellStyle5;
-            this.BlockID.HeaderText = "BLOCK ID";
-            this.BlockID.Name = "BlockID";
-            this.BlockID.ReadOnly = true;
-            this.BlockID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // OperatorID
-            // 
-            this.OperatorID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.OperatorID.DefaultCellStyle = dataGridViewCellStyle6;
-            this.OperatorID.HeaderText = "OPERATOR ID";
-            this.OperatorID.Name = "OperatorID";
-            this.OperatorID.ReadOnly = true;
-            this.OperatorID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dgrConn.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgrConn_CellContentClick);
             // 
             // tabControl1
             // 
@@ -1456,7 +1415,7 @@ namespace DXApplication1
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(555, 193);
+            this.label24.Location = new System.Drawing.Point(508, 193);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(111, 14);
             this.label24.TabIndex = 121;
@@ -1466,7 +1425,7 @@ namespace DXApplication1
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(20, 182);
+            this.label19.Location = new System.Drawing.Point(17, 182);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(104, 14);
             this.label19.TabIndex = 119;
@@ -1476,7 +1435,7 @@ namespace DXApplication1
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(555, 122);
+            this.label20.Location = new System.Drawing.Point(508, 122);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(89, 14);
             this.label20.TabIndex = 121;
@@ -1496,7 +1455,7 @@ namespace DXApplication1
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(555, 44);
+            this.label21.Location = new System.Drawing.Point(508, 44);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(106, 28);
             this.label21.TabIndex = 123;
@@ -1516,7 +1475,7 @@ namespace DXApplication1
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(555, 157);
+            this.label23.Location = new System.Drawing.Point(508, 157);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(28, 14);
             this.label23.TabIndex = 122;
@@ -1536,7 +1495,7 @@ namespace DXApplication1
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(555, 83);
+            this.label22.Location = new System.Drawing.Point(508, 83);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(106, 28);
             this.label22.TabIndex = 122;
@@ -1566,7 +1525,7 @@ namespace DXApplication1
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(20, 44);
+            this.label18.Location = new System.Drawing.Point(17, 44);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(79, 14);
             this.label18.TabIndex = 111;
@@ -1576,7 +1535,7 @@ namespace DXApplication1
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(20, 147);
+            this.label15.Location = new System.Drawing.Point(17, 147);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(83, 14);
             this.label15.TabIndex = 113;
@@ -1586,7 +1545,7 @@ namespace DXApplication1
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(20, 78);
+            this.label17.Location = new System.Drawing.Point(17, 78);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(78, 14);
             this.label17.TabIndex = 115;
@@ -1616,11 +1575,71 @@ namespace DXApplication1
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(20, 112);
+            this.label16.Location = new System.Drawing.Point(17, 112);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(93, 14);
             this.label16.TabIndex = 114;
             this.label16.Text = "Squeeze Speed";
+            // 
+            // IND
+            // 
+            this.IND.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.IND.DefaultCellStyle = dataGridViewCellStyle2;
+            this.IND.HeaderText = "#";
+            this.IND.Name = "IND";
+            this.IND.ReadOnly = true;
+            this.IND.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.IND.Width = 50;
+            // 
+            // DateTimeLog
+            // 
+            this.DateTimeLog.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DateTimeLog.HeaderText = "DATE TIME";
+            this.DateTimeLog.Name = "DateTimeLog";
+            this.DateTimeLog.ReadOnly = true;
+            this.DateTimeLog.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // MachineID
+            // 
+            this.MachineID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MachineID.DefaultCellStyle = dataGridViewCellStyle3;
+            this.MachineID.HeaderText = "PRINTING MACHINE ID";
+            this.MachineID.Name = "MachineID";
+            this.MachineID.ReadOnly = true;
+            this.MachineID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // TroleyID
+            // 
+            this.TroleyID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.TroleyID.DefaultCellStyle = dataGridViewCellStyle4;
+            this.TroleyID.HeaderText = "TROLEY ID";
+            this.TroleyID.Name = "TroleyID";
+            this.TroleyID.ReadOnly = true;
+            this.TroleyID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // BlockID
+            // 
+            this.BlockID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.BlockID.DefaultCellStyle = dataGridViewCellStyle5;
+            this.BlockID.HeaderText = "BLOCK ID";
+            this.BlockID.Name = "BlockID";
+            this.BlockID.ReadOnly = true;
+            this.BlockID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // OperatorID
+            // 
+            this.OperatorID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.OperatorID.DefaultCellStyle = dataGridViewCellStyle6;
+            this.OperatorID.HeaderText = "OPERATOR ID";
+            this.OperatorID.Name = "OperatorID";
+            this.OperatorID.ReadOnly = true;
+            this.OperatorID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.OperatorID.Visible = false;
             // 
             // FrmMain
             // 
@@ -1698,17 +1717,13 @@ namespace DXApplication1
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraBars.BarSubItem barSubItem2;
         private DevExpress.XtraBars.BarButtonItem barButtonItem2;
+
+        private DevExpress.XtraBars.BarButtonItem btnLanguage;
         private System.Windows.Forms.Label label1;
         private DevExpress.XtraEditors.SimpleButton btnReset;
         private System.Windows.Forms.TextBox txtTroleyID;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtSRPrintingMcID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IND;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeLog;
-        private System.Windows.Forms.DataGridViewTextBoxColumn MachineID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TroleyID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BlockID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OperatorID;
         private DevExpress.XtraBars.BarStaticItem barStaticItem5;
         private DevExpress.XtraBars.BarStaticItem bsiPlcIP;
         private DevExpress.XtraBars.BarStaticItem bsiPLCStatus;
@@ -1791,5 +1806,11 @@ namespace DXApplication1
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IND;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeLog;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MachineID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TroleyID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BlockID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OperatorID;
     }
 }

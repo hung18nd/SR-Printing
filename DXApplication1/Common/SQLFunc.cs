@@ -60,6 +60,7 @@ namespace DXApplication1.Common
         {
             ThreadDBStart = true;
             ThreadPollingDB = new Thread(() => ThreadPollingDBProcess());
+            ThreadPollingDB.IsBackground = true;
             ThreadPollingDB.Start();
         }
         public static void StopThreadPollingDB()
@@ -309,7 +310,7 @@ namespace DXApplication1.Common
         {
             //InitGlobalVarial();
             bool bCommOK = false;
-            //Global.WriteLogFile("[ExecuteNonQuery] - " + "\r\nQueryString: " + query_string);
+            Global.WriteLogFileSQL("[ExecuteNonQuery] - " + "\r\nQueryString: " + query_string);
             SqlConnection myConnection = new SqlConnection(connString);
             try
             {

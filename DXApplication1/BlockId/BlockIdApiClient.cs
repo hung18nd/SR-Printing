@@ -98,7 +98,6 @@ namespace DXApplication1.BlockId
                     }
                     catch { }
 
-                    // Phân loại mã lỗi BlockId:
                     // 400 - 404: Lỗi dữ liệu sai, API key sai, subject không tồn tại -> Không tự động retry
                     // 429, 500, 502, 503, 504: Lỗi quá tải, server lỗi tạm thời -> Cho phép retry
                     if (result.StatusCode >= 400 && result.StatusCode <= 404)
